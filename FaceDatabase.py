@@ -33,3 +33,10 @@ class FaceDatabase:
                 name = self.names[i]
 
         return name
+
+    def get_image_for_ID(self, id):
+        try:
+            idx = self.names.index(id)
+            return self.path_to_faces + self.images[idx]
+        except ValueError:
+            return None

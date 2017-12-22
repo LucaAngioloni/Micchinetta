@@ -18,6 +18,7 @@ class FaceRecogniser(QThread):
 
         self.currentFrame = None
         self.active = False
+        self.currentUser = None
 
     def get_current_frame(self):
         return self.currentFrame
@@ -28,6 +29,7 @@ class FaceRecogniser(QThread):
             self.terminate()
 
     def loop(self):
+        self.currentUser = None
         self.start()
 
     def get_single_face(self, face_locations):
@@ -100,9 +102,14 @@ class FaceRecogniser(QThread):
 
                 # Display the resulting image
                 self.currentFrame = frame
-                self.updated.emit()
 
                 if count > 10:
+                    self.currentFrame = cv2.copyMakeBorder(frame, top=20, bottom=20, left=20, right=20, borderType= cv2.BORDER_CONSTANT, value=[0,220,0] )
+                
+                if count > 12:
                     self.active = False
                     video_capture.release()
+                    self.currentUser = last_name
                     self.person_identified.emit()
+
+                self.updated.emit()

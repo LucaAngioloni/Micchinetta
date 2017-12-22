@@ -33,11 +33,11 @@ class MainWindow(QWidget):
         super().resizeEvent(ev)
 
     def activate_video(self):
-        #self.dialogWidget.deactivate()
+        self.dialogWidget.deactivate()
         self.videoWidget.activate()
         self.stackLayout.setCurrentIndex(0)
 
     def activate_dialog(self):
         self.videoWidget.deactivate()
-        #self.dialogWidget.activate()
+        self.dialogWidget.activate(self.videoWidget.face_recogniser.currentUser)
         self.stackLayout.setCurrentIndex(1)
