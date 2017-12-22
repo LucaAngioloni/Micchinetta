@@ -7,5 +7,6 @@ class DialogWidget(QWidget):
     Dialog window controller
     Attributes:
     """
-    def __init__(self):
+    def __init__(self, speech_dialog_manager):
         super().__init__()
+        self.speech_dialog_manager = speech_dialog_manager

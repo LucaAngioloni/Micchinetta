@@ -23,9 +23,9 @@ class MainWindow(QWidget):
         self.stackLayout.addWidget(self.dialogWidget)
 
         self.setLayout(self.stackLayout)
-        self.setMinimumSize(600, 500)
+        self.setMinimumSize(800, 600)
         self.show()
-        self.videoWidget.set_model(np.zeros((100,100, 3)))
+        #self.videoWidget.set_model(np.zeros((100,100, 3)))
 
     def resizeEvent(self, ev):
         """Slot for window resize event (Override)"""

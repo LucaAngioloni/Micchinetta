@@ -23,6 +23,10 @@ class VideoWidget(QLabel):
         self.image = None
         self.face_recogniser = face_recogniser
 
+        self.face_recogniser.updated.connect(self.new_image_slot, type=Qt.QueuedConnection)
+        self.active.connect(self.face_recogniser.loop, type=Qt.QueuedConnection)
+        self.non_active.connect(self.face_recogniser.deactivate, type=Qt.QueuedConnection)
+
     def set_model(self, image):
         """
         Set the reference to the current image.

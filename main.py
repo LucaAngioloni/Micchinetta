@@ -14,6 +14,7 @@ from MainWindow import MainWindow
 from VideoWidget import VideoWidget
 from DialogWidget import DialogWidget
 from FaceRecogniser import FaceRecogniser
+from Speech_DialogManager import Speech_DialogManager
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -21,14 +22,15 @@ if __name__ == '__main__':
         app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
     face_recon = FaceRecogniser()
+    speechManager = Speech_DialogManager()
     video = VideoWidget(face_recon)
-    dialog = DialogWidget()
+    dialog = DialogWidget(speechManager)
 
     window = MainWindow(video, dialog)  # The view controller / view (GUI)
 
-    video.face_recogniser.updated.connect(video.new_image_slot, type=Qt.QueuedConnection)
-    video.active.connect(video.face_recogniser.loop, type=Qt.QueuedConnection)
-    video.non_active.connect(video.face_recogniser.deactivate, type=Qt.QueuedConnection)
+    video.face_recogniser.person_identified.connect(window.activate_dialog, type=Qt.QueuedConnection)
+
+    dialog.speech_dialog_manager.finished.connect(window.activate_video, type=Qt.QueuedConnection)
 
     window.activate_video()
     sys.exit(app.exec_())

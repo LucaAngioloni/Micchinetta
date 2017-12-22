@@ -2,18 +2,44 @@ import face_recognition
 import cv2
 import numpy as np
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal, QThread)
-import time
 
-class LoopThread(QThread):
-    
-    done = pyqtSignal()
+from FaceDatabase import FaceDatabase
 
-    def __init__(self, mfe, n, ):
+
+class FaceRecogniser(QThread):
+
+    updated = pyqtSignal() # in order to work it has to be defined out of the contructor
+    person_identified = pyqtSignal() # in order to work it has to be defined out of the contructor
+
+    def __init__(self):
         super().__init__()
-        self.model_face_encodings = mfe
-        self.names = n
+        self.database = FaceDatabase()
+        self.database.retrieve()
+
+        self.currentFrame = None
         self.active = False
 
+    def get_current_frame(self):
+        return self.currentFrame
+
+    def deactivate(self):
+        self.active = False
+        if self.isRunning():
+            self.terminate()
+
+    def loop(self):
+        self.start()
+
+    def get_single_face(self, face_locations):
+        selected = 0
+        max_area = 0
+        for i, face in enumerate(face_locations):
+            top, right, bottom, left = face
+            area = abs(right-left) * abs(bottom-top)
+            if area > max_area:
+                max_area = area
+                selected = i
+        return [face_locations[selected]]
 
     def run(self):
         self.active = True
@@ -22,37 +48,39 @@ class LoopThread(QThread):
         face_locations = []
         face_encodings = []
         face_names = []
-        process_this_frame = True
+
+        count = 0
+        last_name = ""
 
         while self.active:
             # Grab a single frame of video
             ret, frame = video_capture.read()
 
             if ret:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.flip(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),1)
                 # Resize frame of video to 1/4 size for faster face recognition processing
                 small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
                 # Find all the faces and face encodings in the current frame of video
                 face_locations = face_recognition.face_locations(small_frame)
+
+                if face_locations:
+                    face_locations = self.get_single_face(face_locations)
+                else:
+                    count = 0
+
                 face_encodings = face_recognition.face_encodings(small_frame, face_locations)
 
                 face_names = []
                 for face_encoding in face_encodings:
                     # See if the face is a match for the known face(s)
-                    matches = []
-
-                    for i, model_encoding in enumerate(self.model_face_encodings):
-                        matches.append(face_recognition.compare_faces([model_encoding], face_encoding)[0])
-
-                    name = "Unknown"
-
-                    for i in range(len(matches)):
-                        if matches[i]:
-                            name = self.names[i]
-
+                    name = self.database.get_identity(face_encoding)
                     face_names.append(name)
-
+                    if name != "Unknown" and name == last_name:
+                        count = count + 1
+                    else:
+                        last_name = name
+                        count = 0
 
                 # Display the results
                 for (top, right, bottom, left), name in zip(face_locations, face_names):
@@ -72,40 +100,9 @@ class LoopThread(QThread):
 
                 # Display the resulting image
                 self.currentFrame = frame
-                self.done.emit()
-        
+                self.updated.emit()
 
-class FaceRecogniser(QObject):
-
-    updated = pyqtSignal() # in order to work it has to be defined out of the contructor
-
-    def __init__(self):
-        super().__init__()
-        #sobstitute this with real databesa query
-        self.names = ["Luca", "Pego", "Paola", "Roberto", "Miner"]
-        self.images = ["Faces/luca1.jpg", "Faces/pego1.jpg", "Faces/Paola Censini.jpg", "Faces/Roberto Pegoraro.jpg", "Faces/Alessandro Minervini.jpg"]
-        self.model_face_encodings = []
-        for image in self.images:
-            name_image = face_recognition.load_image_file(image)
-            self.model_face_encodings.append(face_recognition.face_encodings(name_image)[0])
-
-        self.currentFrame = None
-        self.active = False
-        self.thread = LoopThread(self.model_face_encodings, self.names)
-        self.thread.done.connect(self.update_frame)
-
-    def get_current_frame(self):
-        return self.currentFrame
-
-    def deactivate(self):
-        self.active = False
-        self.thread.terminate()
-        self.thread = LoopThread(self.model_face_encodings, self.names)
-        self.thread.done.connect(self.update_frame)
-
-    def loop(self):
-        self.thread.start()
-
-    def update_frame(self):
-        self.currentFrame = self.thread.currentFrame
-        self.updated.emit()
+                if count > 10:
+                    self.active = False
+                    video_capture.release()
+                    self.person_identified.emit()
