@@ -1,3 +1,25 @@
+# MIT License
+
+# Copyright (c) 2017 Luca Angioloni and Francesco Pegoraro
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal)
 from PyQt5.QtGui import QImage, qRgb, QPixmap
 from PyQt5.QtWidgets import (QLabel, QSizePolicy)
@@ -8,6 +30,13 @@ class VideoWidget(QLabel):
     """
     Custom Widget to show the visual feedback of face recognition.
     Attributes:
+        active      Qt Signal emitted every time this view is activated (visible)
+        non_active  Qt Signal emitted every time this view is deactivated (non visible)
+        V_margin    dimension of right and left margin in window (widget) coordinates for the image
+        H_margin    dimension of top and bottom margin in window (widget) coordinates for the image
+        h           currentFrame height
+        w           currentFrame width
+        image       image representing the currentFrame. (Numpy Array)
     """
     active = pyqtSignal() # in order to work it has to be defined out of the contructor
     non_active = pyqtSignal() # in order to work it has to be defined out of the contructor
@@ -37,19 +66,21 @@ class VideoWidget(QLabel):
         self.updateView()  # update the view to show the first frame
 
     def new_image_slot(self):
+        """Qt Slot for updated signal of the FaceRecogniser. Called every time a new frame is elaborated"""
         self.image = self.face_recogniser.get_current_frame()
         self.updateView()
 
     def activate(self):
+        """Called upon activation of this view, emits the activated signal so that the Face recognition process can start"""
         self.active.emit()
 
     def deactivate(self):
+        """Called upon deactivation of this view, emits the non_active signal so that the Face recognition process can stop"""
         self.non_active.emit()
 
     def updateView(self):
         """Update the view converting the current state image (np.ndarray) to an image (QPixmap) and showing it on screen"""
         # All this conversion are not beautiful but necessary...
-        #mat = self.image
         if self.image is None:
             return
         mat = self.image
@@ -78,7 +109,7 @@ class VideoWidget(QLabel):
             qim = QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QImage.Format_Indexed8)
             qim.setColorTable(gray_color_table)
             return qim
-        elif len(im.shape) == 3:  # maybe in the future accept color images (for heatmap)
+        elif len(im.shape) == 3:
             if im.shape[2] == 3:
                 qim = QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QImage.Format_RGB888)
                 return qim
