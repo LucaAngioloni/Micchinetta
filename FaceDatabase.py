@@ -27,6 +27,8 @@ import numpy as np
 import os
 import sys
 
+import sqlite3
+
 class FaceDatabase:
     """
     Class that provides an interface for the faces and identities database.
@@ -36,9 +38,11 @@ class FaceDatabase:
     """
     def __init__(self):
         self.path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
+        #self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
         self.model_face_encodings = []
 
     def retrieve(self):
+        #preload faces encodings
         self.images = sorted([f for f in os.listdir(self.path_to_faces) if not f.startswith('.')],
                             key=lambda f: f.lower())
         self.names = [os.path.splitext(n)[0] for n in self.images]
@@ -68,3 +72,6 @@ class FaceDatabase:
             return self.path_to_faces + self.images[idx]
         except ValueError:
             return None
+
+    # def close(self):
+    #     self.conn.close()
