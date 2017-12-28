@@ -75,10 +75,9 @@ class DialogWidget(QWidget):
 
     def activate(self, user):
         db = FaceDatabase()
-        db.retrieve()
 
         img = db.get_image_for_ID(user)
-        self.name.setText(user)
+        self.name.setText(db.get_nickname(user))
         if img is not None:
             qpix = QPixmap(img)
 

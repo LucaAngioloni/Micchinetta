@@ -26,6 +26,7 @@ import numpy as np
 
 import os
 import sys
+import json
 
 import sqlite3
 
@@ -38,40 +39,52 @@ class FaceDatabase:
     """
     def __init__(self):
         self.path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
-        #self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
-        self.model_face_encodings = []
+        self.model_face_encodings = {}
 
     def retrieve(self):
         #preload faces encodings
-        self.images = sorted([f for f in os.listdir(self.path_to_faces) if not f.startswith('.')],
-                            key=lambda f: f.lower())
-        self.names = [os.path.splitext(n)[0] for n in self.images]
-
-        self.model_face_encodings = []
-        for image in self.images:
-            name_image = face_recognition.load_image_file(self.path_to_faces+image)
-            self.model_face_encodings.append(face_recognition.face_encodings(name_image)[0])
+        self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
+        c = self.conn.cursor()
+        for row in c.execute('SELECT id, encoding FROM faces'):
+            if row is None:
+                self.conn.close()
+                return
+            self.model_face_encodings[row[0]] = np.array(json.loads(row[1]))
+        self.conn.close()
 
     def get_identity(self, face_encoding):
-        matches = []
+        matches = {}
 
-        for i, model_encoding in enumerate(self.model_face_encodings):
-            matches.append(face_recognition.compare_faces([model_encoding], face_encoding)[0])
+        for key in self.model_face_encodings:
+            model_encoding = self.model_face_encodings[key]
+            matches[key] = face_recognition.compare_faces([model_encoding], face_encoding)[0]
 
-        name = "Unknown"
+        id = "Unknown"
 
-        for i in range(len(matches)):
-            if matches[i]:
-                name = self.names[i]
+        for key in matches:
+            if matches[key]:
+                id = key
 
-        return name
+        return id
 
     def get_image_for_ID(self, id):
-        try:
-            idx = self.names.index(id)
-            return self.path_to_faces + self.images[idx]
-        except ValueError:
+        self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
+        c = self.conn.cursor()
+        c.execute('SELECT im_path FROM faces WHERE id = ?', (id,))
+        ret = c.fetchone()
+        if ret is None:
+            self.conn.close()
             return None
+        self.conn.close()
+        return self.path_to_faces + ret[0]
 
-    # def close(self):
-    #     self.conn.close()
+    def get_nickname(self, id):
+        self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
+        c = self.conn.cursor()
+        c.execute('SELECT nikname FROM faces WHERE id = ?', (id,))
+        ret = c.fetchone()
+        if ret is None:
+            self.conn.close()
+            return None
+        self.conn.close()
+        return ret[0]

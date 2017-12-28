@@ -95,7 +95,7 @@ class FaceRecogniser(QThread):
         face_names = []
 
         count = 0
-        last_name = ""
+        last_id = ""
 
         while self.active:
             # Grab a single frame of video
@@ -119,12 +119,13 @@ class FaceRecogniser(QThread):
                 face_names = []
                 for face_encoding in face_encodings:
                     # See if the face is a match for the known face(s)
-                    name = self.database.get_identity(face_encoding)
+                    id = self.database.get_identity(face_encoding)
+                    name = self.database.get_nickname(id)
                     face_names.append(name)
-                    if name != "Unknown" and name == last_name:
+                    if id != "Unknown" and id == last_id:
                         count = count + 1
                     else:
-                        last_name = name
+                        last_id = id
                         count = 0
 
                 # Display the results
@@ -152,7 +153,7 @@ class FaceRecogniser(QThread):
                 if count > 12:  # Final recognition of a user and send the person_identified signal
                     self.active = False
                     video_capture.release()
-                    self.currentUser = last_name
+                    self.currentUser = last_id
                     self.person_identified.emit()
 
                 self.updated.emit()

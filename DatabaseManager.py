@@ -136,9 +136,9 @@ class CustomLabel(QLabel):
             query.bindValue(":Surname", d['Surname'])
             query.bindValue(":nikname", d['nikname'])
             query.bindValue(":mail", d['mail'])
+            query.bindValue(":password", d['password'])
             query.bindValue(":im_path", d['im_path'])
             query.bindValue(":encoding", d['encoding'])
-            query.bindValue(":password", d['password'])
             query.exec_()
 
             self.new_id.emit()
