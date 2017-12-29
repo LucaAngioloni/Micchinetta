@@ -247,10 +247,11 @@ class Bot():
                     reply = reply + str(self.request[prod]) +' ' + prod + ' '
                     cost += self.prodlist[prod] * self.request[prod]
             reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
-            return False, reply
             self.say(reply)
             print(self.request)
             print(reply)
+            return False, reply
+
 
 
 
