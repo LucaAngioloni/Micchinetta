@@ -91,6 +91,9 @@ class DialogWidget(QWidget):
 
     
     def update_dialog(self):
+        QString a = "Hello!"
+        self.dialog.appendPlainText(self, a)
+
         # slot called whenever Speech_DialogManager has updates. Update the view
         pass
 

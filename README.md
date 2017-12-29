@@ -6,15 +6,17 @@ HCI project
 
 
 ## Requirements
-| Software                        | Verison        | Required |
-| ------------------------------- |:--------------:| --------:|
-| **Python**                      |     >= 3.5     |    Yes   |
-| **Qt**                          |    >= 5.9.1    |    Yes   |
-| **PyQt5** (Python Package)      |    >= 5.9.1    |    Yes   |
-| **Numpy** (Python Package)      |Tested on v1.13 |    Yes   |
-| **Scipy** (Python Package)      |Tested on v1.0.0|    Yes   |
-| **SQLite**                      |      >= 3      |    Yes   |
-| **OpenCV**                      |    >= 3.3.1    |    Yes   |
+| Software                                                    | Version        | Required |
+| ------------------------------------------------------------|:--------------:| --------:|
+| **Python**                                                  |     >= 3.5     |    Yes   |
+| **Qt**                                                      |    >= 5.9.1    |    Yes   |
+| **PyQt5** (Python Package)                                  |    >= 5.9.1    |    Yes   |
+| **Numpy** (Python Package)                                  |Tested on v1.13 |    Yes   |
+| **Scipy** (Python Package)                                  |Tested on v1.0.0|    Yes   |
+| **TreeTagger** (Python Package)                             |Tested on v1.0.1|    Yes   |
+| **SpeechRecognition** (Python Package)                      |Tested on v3.8.1|    Yes   |
+| **SQLite**                                                  |      >= 3      |    Yes   |
+| **OpenCV**                                                  |    >= 3.3.1    |    Yes   |
 | [**Face Recognition**](https://github.com/ageitgey/face_recognition) (Python Package)|      >= 3      |    Yes   |
 | QDarkStylesheet (Python Package)|    >= 2.3.1    | Optional |
 

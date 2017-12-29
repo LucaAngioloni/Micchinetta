@@ -4,6 +4,12 @@ import pyttsx3
 from collections import Counter
 from Converter import Converter
 
+from gtts import gTTS
+import os
+from playsound import playsound
+
+
+
 # engine = pyttsx3.init()
 # voices = engine.getProperty('voices')
 # engine.setProperty('voice', voices[1].id)
@@ -37,7 +43,7 @@ class Bot():
         print(self.username)
 
     def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
-        self.prodlist_itemoid.extend(['coca-cole', 'acque'])
+        self.prodlist_itemoid.extend(['coca-cole', 'acque', 'Coca Cola'])
 
     def init_engine(self):
         engine = pyttsx3.init()
@@ -62,7 +68,7 @@ class Bot():
         # bisogna controllare se esiste una versione semplificata della parola,
         # in caso negativo si aggiungono qui i casi speciali
         if item[2] == '<unknown>':
-            if item[0] == 'coca-cole' or 'cocacola' or 'cocacole':
+            if item[0] == 'coca-cole' or 'cocacola' or 'cocacole' or 'Coca Cola':
                 return 'coca-cola'
             else:
                 return item[0]
@@ -203,18 +209,24 @@ class Bot():
             pred = self.get_predicates(phrase)
             amount = self.get_amount(phrase)
             prod = self.get_prod(phrase)
-            if pred[0] in self.positive_predicates:
+            if pred[0] in self.positive_predicates and prod in self.prodlist:
                 self.request[prod]+=amount
-            elif pred[0] in self.negative_predicates:
+            elif pred[0] in self.negative_predicates and prod in self.prodlist:
                 self.request[prod]-=amount
 
 
     def say(self, s):
+        tts = gTTS(text=s, lang='it')
+        tts.save("good.mp3")
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        cwd = os.getcwd()
+        playsound(dir_path+"/"+"good.mp3")
+
         # self.engine.say(s)
         # self.engine.runAndWait() #blocks                                                                          
 
 
-    def sayhi(self):
+    def sayhi(self): 
         greetings = "Ciao "+str(self.username)+" cosa ti serve?"
         print(greetings)
         self.say(greetings)
@@ -233,7 +245,7 @@ class Bot():
                 if self.request[prod] > 0:
                     reply = reply + str(self.request[prod]) +' ' + prod + ' '
                     cost += self.prodlist[prod] * self.request[prod]
-            reply = reply + 'al prezzo di ' + str(cost) + '€ ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
+            reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
             self.say(reply)
             print(self.request)
             print(reply)

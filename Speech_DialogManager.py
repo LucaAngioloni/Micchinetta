@@ -71,7 +71,7 @@ class Speech_DialogManager(QThread):
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-    def write():
+    def write(self):
         usersays = input("Say something!")
         return usersays
 
@@ -90,7 +90,8 @@ class Speech_DialogManager(QThread):
 
 
         while self.active:
-            user_says = self.record_and_understand() # da sostituire con record_and_understand
+            user_says = self.write() # da sostituire con record_and_understand
+            self.updated.emit()
             if self.bot.reply(user_says):
                 print("fine")
 
