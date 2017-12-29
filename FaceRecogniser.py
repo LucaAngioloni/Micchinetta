@@ -53,6 +53,7 @@ class FaceRecogniser(QThread):
         self.active = False
         self.currentUser = None
 
+
     def get_current_frame(self):
         """Getter for the currentFrame attribute"""
         return self.currentFrame

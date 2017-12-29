@@ -77,6 +77,9 @@ class DialogWidget(QWidget):
         db = FaceDatabase()
 
         img = db.get_image_for_ID(user)
+
+        self.speech_dialog_manager.set_username(db.get_nickname(user));
+
         self.name.setText(db.get_nickname(user))
         if img is not None:
             qpix = QPixmap(img)
@@ -84,6 +87,7 @@ class DialogWidget(QWidget):
             self.image.setPixmap(qpix.scaled(self.image.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
         else:
             self.image.setText("None")
+        self.active.emit()
 
     
     def update_dialog(self):

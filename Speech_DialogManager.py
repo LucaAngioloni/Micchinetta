@@ -22,6 +22,9 @@
 
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal, QThread)
 import time
+import speech_recognition as sr
+
+from Bot import Bot
 
 class Speech_DialogManager(QThread):
     """
@@ -37,7 +40,43 @@ class Speech_DialogManager(QThread):
         super().__init__()
         self.active = False
 
+        self.recognizer = sr.Recognizer()
+        self.products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
+        self.bot = Bot(self.products)
+        self.username = ''
+        
+        # bot.set_user_name(username)
+        # bot.sayhi()
+
+
+    def set_username(self, name):
+        self.username = name
+        self.bot.set_user_name(self.username)
+
+    def record_and_understand(self):
+        with sr.Microphone() as source:
+            print("Say something!")
+            audio = self.recognizer.listen(source)
+        print("stopped recording")
+        # Speech recognition using Google Speech Recognition
+        try:
+        # for testing purposes, we're just using the default API key
+        # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
+        # instead of `r.recognize_google(audio)`
+            said = self.recognizer.recognize_google(audio, language='it')
+            print("You said: " + said)
+            return said
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+    def write():
+        usersays = input("Say something!")
+        return usersays
+
     def loop(self):
+        #self.bot.say("ok")
         self.start()
 
     def deactivate(self):
@@ -47,7 +86,16 @@ class Speech_DialogManager(QThread):
 
     def run(self):
         self.active = True
-        # while self.active:
+        #self.bot.sayhi()
+
+
+        while self.active:
+            user_says = self.record_and_understand() # da sostituire con record_and_understand
+            if self.bot.reply(user_says):
+                print("fine")
+
+
+
         #     pass
         # self.updated.emit()
         # self.finished.emit()

@@ -34,6 +34,7 @@ class Bot():
 
     def set_user_name(self, name):
         self.username = name
+        print(self.username)
 
     def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
         self.prodlist_itemoid.extend(['coca-cole', 'acque'])
@@ -208,9 +209,12 @@ class Bot():
                 self.request[prod]-=amount
 
 
-    def say(self, s):                                                                          
-        self.engine.say(s)
-        a = self.engine.runAndWait() #blocks   
+    def say(self, s):
+        self.engine.say("ok")
+        self.engine.runAndWait() #blocks                                                                          
+        #self.engine.say(s)
+        #a = self.engine.runAndWait() #blocks
+        pass   
 
     def sayhi(self):
         greetings = "Ciao "+str(self.username)+" cosa ti serve?"
