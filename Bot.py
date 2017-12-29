@@ -232,9 +232,10 @@ class Bot():
         self.say(greetings)
 
     def reply(self, userask):
+
         if self.check_fore_completings(userask):
             reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
-            return True
+            return True,reply
             # use API to complete request for the amount
         if self.check_for_products(userask):
             print("ok")
@@ -246,6 +247,7 @@ class Bot():
                     reply = reply + str(self.request[prod]) +' ' + prod + ' '
                     cost += self.prodlist[prod] * self.request[prod]
             reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
+            return False, reply
             self.say(reply)
             print(self.request)
             print(reply)
