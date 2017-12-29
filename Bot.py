@@ -210,11 +210,9 @@ class Bot():
 
 
     def say(self, s):
-        self.engine.say("ok")
-        self.engine.runAndWait() #blocks                                                                          
-        #self.engine.say(s)
-        #a = self.engine.runAndWait() #blocks
-        pass   
+        # self.engine.say(s)
+        # self.engine.runAndWait() #blocks                                                                          
+
 
     def sayhi(self):
         greetings = "Ciao "+str(self.username)+" cosa ti serve?"
