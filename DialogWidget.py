@@ -103,7 +103,6 @@ class DialogWidget(QWidget):
         self.active.emit()
 
     def update_bill(self, bill):
-        self.table.clear()
         while (self.table.rowCount() > 0):
             self.table.removeRow(0)
         self.table.setRowCount(0);
