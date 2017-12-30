@@ -1,12 +1,10 @@
 from treetagger import TreeTagger
 
-import pyttsx3
 from collections import Counter
 from Converter import Converter
 
-from gtts import gTTS
-import os
-from playsound import playsound
+from subprocess import call
+
 
 
 
@@ -29,7 +27,6 @@ class Bot():
         self.request = Counter(self.prodlist.keys())
         self.request.subtract(self.request) # sottraggo se stesso cosi da avere un dict con keys = nome prodotti, e value=0
 
-        self.engine = self.init_engine()
         self.tagger = TreeTagger(language='italian')
         self.converter = Converter()
 
@@ -45,11 +42,6 @@ class Bot():
     def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
         self.prodlist_itemoid.extend(['coca-cole', 'acque', 'Coca Cola'])
 
-    def init_engine(self):
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
-        engine.setProperty('voice', voices[1].id)
-        return engine
     def check_fore_completings(self, userask):
         for word in userask.split():
             if word.lower() in self.completings:
@@ -215,27 +207,17 @@ class Bot():
                 self.request[prod]-=amount
 
 
-    def say(self, s):
-        tts = gTTS(text=s, lang='it')
-        tts.save("good.mp3")
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        cwd = os.getcwd()
-        playsound(dir_path+"/"+"good.mp3")
-
-        # self.engine.say(s)
-        # self.engine.runAndWait() #blocks                                                                          
-
-
     def sayhi(self): 
         greetings = "Ciao "+str(self.username)+" cosa ti serve?"
         print(greetings)
-        self.say(greetings)
+        call(["python3", "speak.py", greetings])
 
     def reply(self, userask):
 
         if self.check_fore_completings(userask):
             reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
-            return True,reply
+            call(["python3", "speak.py", reply])
+            return True,reply, self.request
             # use API to complete request for the amount
         if self.check_for_products(userask):
             print("ok")
@@ -246,11 +228,14 @@ class Bot():
                 if self.request[prod] > 0:
                     reply = reply + str(self.request[prod]) +' ' + prod + ' '
                     cost += self.prodlist[prod] * self.request[prod]
+            cost = float("{0:.2f}".format(cost))
+            print(cost)
             reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
-            self.say(reply)
+            #self.say(reply)
+            call(["python3", "speak.py", reply])
             print(self.request)
             print(reply)
-            return False, reply
+            return False, reply, self.request
 
 
 

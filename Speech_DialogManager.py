@@ -33,7 +33,7 @@ class Speech_DialogManager(QThread):
     Attributes:
         
     """
-    updated = pyqtSignal(object)  # in order to work it has to be defined out of the contructor
+    updated = pyqtSignal(object, object)  # in order to work it has to be defined out of the contructor
     finished = pyqtSignal()  # in order to work it has to be defined out of the contructor
 
     def __init__(self):
@@ -82,19 +82,16 @@ class Speech_DialogManager(QThread):
 
     def run(self):
         self.active = True
-        #self.bot.sayhi()
-
+        self.bot.sayhi()
 
         while self.active:
             user_says = self.write() # da sostituire con record_and_understand
-            self.updated.emit(user_says)
-            val, reply = self.bot.reply(user_says)
-            self.updated.emit(reply)
+            self.updated.emit(user_says, 0)
+            val, reply, bill = self.bot.reply(user_says)
+            self.updated.emit(reply, bill)
             if val:
                 print("fine")
-
-
+                self.finished.emit()
 
         #     pass
         # self.updated.emit()
-        # self.finished.emit()

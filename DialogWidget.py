@@ -21,11 +21,12 @@
 # SOFTWARE.
 
 from PyQt5.QtWidgets import (QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, 
-	QStackedLayout, QTableWidget, QPlainTextEdit, QSizePolicy)
+	QStackedLayout, QTableWidget, QPlainTextEdit, QSizePolicy, QHeaderView, QTableWidgetItem)
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal)
 from PyQt5.QtGui import QImage, qRgb, QPixmap
 
 from FaceDatabase import FaceDatabase
+
 
 class DialogWidget(QWidget):
     """
@@ -44,6 +45,18 @@ class DialogWidget(QWidget):
         self.name = QLabel()
         self.dialog = QPlainTextEdit()
         self.table = QTableWidget()
+
+        self.dialog.setReadOnly(True)
+        self.table.setColumnCount(2);
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.setHorizontalHeaderLabels(['prodotti', 'prezzo'])
+
+        self.list_products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
+
+
+
 
 
         image_v_box = QVBoxLayout()
@@ -69,11 +82,11 @@ class DialogWidget(QWidget):
         self.active.connect(self.speech_dialog_manager.loop, type=Qt.QueuedConnection)
         self.non_active.connect(self.speech_dialog_manager.deactivate, type=Qt.QueuedConnection)
 
-
     def deactivate(self):
         self.non_active.emit()
 
     def activate(self, user):
+        self.dialog.clear()
         db = FaceDatabase()
 
         img = db.get_image_for_ID(user)
@@ -89,11 +102,29 @@ class DialogWidget(QWidget):
             self.image.setText("None")
         self.active.emit()
 
-    
-    def update_dialog(self, phrase):
-        self.dialog.appendPlainText(phrase)
+    def update_bill(self, bill):
+        self.table.clear()
+        while (self.table.rowCount() > 0):
+            self.table.removeRow(0)
+        self.table.setRowCount(0);
+        for product in bill:
 
-        # slot called whenever Speech_DialogManager has updates. Update the view
-        pass
+            if bill[product] > 0:
+                price = float("{0:.2f}".format(bill[product]*self.list_products[product]))
+                rowPosition = self.table.rowCount()
+                self.table.insertRow(rowPosition)
+                self.table.setItem(rowPosition , 0, QTableWidgetItem(product))
+                self.table.setItem(rowPosition , 1, QTableWidgetItem(str(price)))
+
+    # slot called whenever Speech_DialogManager has updates. Update the view
+    def update_dialog(self, phrase, bill):
+        if bill is not 0:
+            print("bill")
+            print(bill)
+            self.update_bill(bill)
+        self.dialog.appendPlainText(phrase)
+        self.dialog.appendPlainText('\n')
+
+
 
 
