@@ -23,6 +23,8 @@
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal, QThread)
 import time
 import speech_recognition as sr
+from subprocess import call
+
 
 from Bot import Bot
 
@@ -65,6 +67,7 @@ class Speech_DialogManager(QThread):
             return said
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
+            return 'impossibile capire'
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
@@ -81,15 +84,25 @@ class Speech_DialogManager(QThread):
         if self.isRunning():
             self.quit()
 
+    def sayhi(self, greetings): 
+        call(["python3", "speak.py", greetings])
+
     def run(self):
         self.active = True
-        self.bot.sayhi()
+        greetings = "Ciao "+str(self.username)+" cosa ti serve?"
+
+        self.updated.emit(greetings, 0)
+        self.sayhi(greetings)
 
         while self.active:
-            user_says = self.write() # da sostituire con record_and_understand
+            user_says = self.record_and_understand() # da sostituire con record_and_understand
+            #user_says = self.write() # da sostituire con record_and_understand
+
             self.updated.emit(user_says, 0)
             val, reply, bill = self.bot.reply(user_says)
             self.updated.emit(reply, bill)
+            call(["python3", "speak.py", reply])
+
             if val:
                 print("Qui usare API e fare addebito")
                 self.finished.emit()

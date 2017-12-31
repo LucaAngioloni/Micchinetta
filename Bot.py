@@ -3,21 +3,6 @@ from treetagger import TreeTagger
 from collections import Counter
 from Converter import Converter
 
-from subprocess import call
-
-
-
-
-# engine = pyttsx3.init()
-# voices = engine.getProperty('voices')
-# engine.setProperty('voice', voices[1].id)
-
-# engine.say('Riccardo Celli coglione, cosa farai quando avrai finito gli esami?')
-# engine.runAndWait()
-
-# 
-# 
-
 class Bot():
     def __init__(self, products):
         self.username = ''
@@ -210,15 +195,16 @@ class Bot():
                 self.request[prod]-=amount
 
 
-    def sayhi(self): 
-        greetings = "Ciao "+str(self.username)+" cosa ti serve?"
-        call(["python3", "speak.py", greetings])
-
     def reply(self, userask):
 
-        if self.check_fore_completings(userask):
+        if userask.lower() is "impossibile capire":
+            reply = 'Scusa non ho capito. Ripeti perfavore.'
+            print(reply)
+            #call(["python3", "speak.py", reply])
+            return False, reply, self.request
+        elif self.check_fore_completings(userask):
             reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
-            call(["python3", "speak.py", reply])
+            #call(["python3", "speak.py", reply])
             return True, reply, self.request
             # use API to complete request for the amount
         elif self.check_for_products(userask):
@@ -234,14 +220,14 @@ class Bot():
             print(cost)
             reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
             #self.say(reply)
-            call(["python3", "speak.py", reply])
+            #call(["python3", "speak.py", reply])
             print(self.request)
             print(reply)
             return False, reply, self.request
         else:
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
-            call(["python3", "speak.py", reply])
+            #call(["python3", "speak.py", reply])
             return False, reply, self.request
 
 

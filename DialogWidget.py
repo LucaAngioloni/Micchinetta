@@ -121,8 +121,6 @@ class DialogWidget(QWidget):
     # slot called whenever Speech_DialogManager has updates. Update the view
     def update_dialog(self, phrase, bill):
         if bill is not 0:
-            print("whay!!!")
-            print("bill")
             print(bill)
             self.update_bill(bill)
         self.dialog.appendPlainText(phrase)
