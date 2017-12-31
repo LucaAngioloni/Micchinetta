@@ -87,6 +87,9 @@ class Bot():
             return True
 
     def set_predicate(self, phrase):
+        # data una frase, controllo se ha gia esattamente un predicato, se si è ok e la ritorno
+        # altrimenti tolgo tutti i predicati e imposto che ci sia "rimuovere"
+        # Es. "voglio togliere un acqua" -> "rimuovere un acqua"
         if len(self.get_predicates(phrase)) ==1:
             return phrase
         querywords = phrase.split()
@@ -209,7 +212,6 @@ class Bot():
 
     def sayhi(self): 
         greetings = "Ciao "+str(self.username)+" cosa ti serve?"
-        print(greetings)
         call(["python3", "speak.py", greetings])
 
     def reply(self, userask):
@@ -217,9 +219,9 @@ class Bot():
         if self.check_fore_completings(userask):
             reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
             call(["python3", "speak.py", reply])
-            return True,reply, self.request
+            return True, reply, self.request
             # use API to complete request for the amount
-        if self.check_for_products(userask):
+        elif self.check_for_products(userask):
             print("ok")
             self.update_request(userask)
             reply = 'Quindi vuoi '
@@ -236,6 +238,12 @@ class Bot():
             print(self.request)
             print(reply)
             return False, reply, self.request
+        else:
+            reply = 'Scusa non ho capito. Ripeti perfavore.'
+            print(reply)
+            call(["python3", "speak.py", reply])
+            return False, reply, self.request
+
 
 
 

@@ -51,11 +51,9 @@ class DialogWidget(QWidget):
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
-        self.table.setHorizontalHeaderLabels(['prodotti', 'prezzo'])
+        self.table.setHorizontalHeaderLabels(['prodotto', 'prezzo'])
 
         self.list_products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
-
-
 
 
 
@@ -87,6 +85,7 @@ class DialogWidget(QWidget):
 
     def activate(self, user):
         self.dialog.clear()
+        self.clear_table()
         db = FaceDatabase()
 
         img = db.get_image_for_ID(user)
@@ -102,22 +101,27 @@ class DialogWidget(QWidget):
             self.image.setText("None")
         self.active.emit()
 
-    def update_bill(self, bill):
+    def clear_table(self):
         while (self.table.rowCount() > 0):
             self.table.removeRow(0)
         self.table.setRowCount(0);
+
+    def update_bill(self, bill):
+        self.clear_table()
         for product in bill:
 
             if bill[product] > 0:
                 price = float("{0:.2f}".format(bill[product]*self.list_products[product]))
+                string_prod = str(product) + ' ' + 'X' + str(bill[product])
                 rowPosition = self.table.rowCount()
                 self.table.insertRow(rowPosition)
-                self.table.setItem(rowPosition , 0, QTableWidgetItem(product))
+                self.table.setItem(rowPosition , 0, QTableWidgetItem(string_prod))
                 self.table.setItem(rowPosition , 1, QTableWidgetItem(str(price)))
 
     # slot called whenever Speech_DialogManager has updates. Update the view
     def update_dialog(self, phrase, bill):
         if bill is not 0:
+            print("whay!!!")
             print("bill")
             print(bill)
             self.update_bill(bill)

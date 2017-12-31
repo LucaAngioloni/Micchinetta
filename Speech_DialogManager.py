@@ -42,11 +42,12 @@ class Speech_DialogManager(QThread):
 
         self.recognizer = sr.Recognizer()
         self.products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
-        self.bot = Bot(self.products)
         self.username = ''
 
     def set_username(self, name):
         self.username = name
+        self.bot = Bot(self.products)
+
         self.bot.set_user_name(self.username)
 
     def record_and_understand(self):
@@ -72,13 +73,13 @@ class Speech_DialogManager(QThread):
         return usersays
 
     def loop(self):
-        #self.bot.say("ok")
         self.start()
 
     def deactivate(self):
         self.active = False
+        self.quit()
         if self.isRunning():
-            self.terminate()
+            self.quit()
 
     def run(self):
         self.active = True
@@ -90,8 +91,8 @@ class Speech_DialogManager(QThread):
             val, reply, bill = self.bot.reply(user_says)
             self.updated.emit(reply, bill)
             if val:
-                print("fine")
+                print("Qui usare API e fare addebito")
                 self.finished.emit()
+                self.deactivate()
 
-        #     pass
-        # self.updated.emit()
+
