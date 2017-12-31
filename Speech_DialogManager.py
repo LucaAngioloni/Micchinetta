@@ -70,6 +70,7 @@ class Speech_DialogManager(QThread):
             return 'impossibile capire'
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            return 'richieste speech-to-text terminate'
 
     def write(self):
         usersays = input("Say something!")

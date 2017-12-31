@@ -197,7 +197,7 @@ class Bot():
 
     def reply(self, userask):
 
-        if userask.lower() is "impossibile capire":
+        if userask.lower() is "impossibile capire" or userask.lower() is 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
             #call(["python3", "speak.py", reply])
