@@ -1,5 +1,7 @@
 # Micchinetta
 
+[![logo_micchinetta.jpg](https://s14.postimg.org/s9769vls1/logo_micchinetta.jpg)](https://postimg.org/image/nnb21j08t/)
+
 ## Assignment
 Deploy an application interface using both face and speech recognition to achieve a transaction between the user and a vending machine. 
 With a webcam, the system should recognize known people. After the recognition, the application must start a conversation-like dialogue with the user:
