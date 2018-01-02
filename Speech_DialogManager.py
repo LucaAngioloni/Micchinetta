@@ -96,7 +96,7 @@ class Speech_DialogManager(QThread):
         self.sayhi(greetings)
 
         while self.active:
-            user_says = self.record_and_understand() # da sostituire con record_and_understand
+            user_says = self.write() # da sostituire con record_and_understand
             #user_says = self.write() # da sostituire con record_and_understand
 
             self.updated.emit(user_says, 0)

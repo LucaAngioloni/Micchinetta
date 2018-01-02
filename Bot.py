@@ -194,8 +194,15 @@ class Bot():
             elif pred[0] in self.negative_predicates and prod in self.prodlist:
                 self.request[prod]-=amount
 
+    def check_if_request_is_not_empty(self):
+        for prod in self.request:
+            if self.request[prod] > 0:
+                return True
+        return False
 
     def reply(self, userask):
+
+        userask = userask.replace("'", " ")
 
         if userask.lower() is "impossibile capire" or userask.lower() is 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
@@ -203,9 +210,14 @@ class Bot():
             #call(["python3", "speak.py", reply])
             return False, reply, self.request
         elif self.check_fore_completings(userask):
-            reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
+            if self.check_if_request_is_not_empty():
+                reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
+                return True, reply, self.request
+            else:
+                reply = 'Ma ' + str(self.username) + ' ancora non mi hai chiesto nessun prodotto!'
+                return False, reply, self.request
             #call(["python3", "speak.py", reply])
-            return True, reply, self.request
+            
             # use API to complete request for the amount
         elif self.check_for_products(userask):
             print("ok")
