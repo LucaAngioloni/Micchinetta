@@ -35,6 +35,8 @@ class Speech_DialogManager(QThread):
     Attributes:
         
     """
+    rec_on = pyqtSignal()  # in order to work it has to be defined out of the contructor
+    rec_off = pyqtSignal()  # in order to work it has to be defined out of the contructor
     updated = pyqtSignal(object, object)  # in order to work it has to be defined out of the contructor
     finished = pyqtSignal()  # in order to work it has to be defined out of the contructor
 
@@ -55,8 +57,11 @@ class Speech_DialogManager(QThread):
     def record_and_understand(self):
         with sr.Microphone() as source:
             print("Say something!")
-            audio = self.recognizer.listen(source)
+            self.rec_on.emit()
+            audio = self.recognizer.listen(source, timeout=6.0)
         print("stopped recording")
+        self.rec_off.emit()
+
         # Speech recognition using Google Speech Recognition
         try:
         # for testing purposes, we're just using the default API key
@@ -96,7 +101,7 @@ class Speech_DialogManager(QThread):
         self.sayhi(greetings)
 
         while self.active:
-            user_says = self.write() # da sostituire con record_and_understand
+            user_says = self.record_and_understand() # da sostituire con record_and_understand
             #user_says = self.write() # da sostituire con record_and_understand
 
             self.updated.emit(user_says, 0)
@@ -104,9 +109,14 @@ class Speech_DialogManager(QThread):
             self.updated.emit(reply, bill)
             call(["python3", "speak.py", reply])
 
-            if val:
-                print("Qui usare API e fare addebito")
+            if val is None:
                 self.finished.emit()
                 self.deactivate()
+            else:
+                if val:
+                    print("Qui usare API e fare addebito")
+                    self.finished.emit()
+                    self.deactivate()
+
 
 

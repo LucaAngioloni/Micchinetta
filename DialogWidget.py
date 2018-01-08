@@ -44,6 +44,7 @@ class DialogWidget(QWidget):
         self.image = QLabel()
         self.name = QLabel()
         self.dialog = QPlainTextEdit()
+        self.microphone = QLabel()
         self.table = QTableWidget()
 
         self.dialog.setReadOnly(True)
@@ -55,15 +56,24 @@ class DialogWidget(QWidget):
 
         self.list_products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
 
+        self.microphone.resize(50,50)
 
+        qpix = QPixmap("mic_grey.png")
+
+        self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
         image_v_box = QVBoxLayout()
         image_v_box.addWidget(self.image)
         image_v_box.addWidget(self.name)
 
+        dialog_v_box = QVBoxLayout()
+        dialog_v_box.addWidget(self.dialog)
+        dialog_v_box.addWidget(self.microphone)
+
         img_dialog_h_box = QHBoxLayout()
         img_dialog_h_box.addLayout(image_v_box)
-        img_dialog_h_box.addWidget(self.dialog)
+        #img_dialog_h_box.addWidget(self.dialog)
+        img_dialog_h_box.addLayout(dialog_v_box)
 
         layout = QVBoxLayout()
         layout.addLayout(img_dialog_h_box)
@@ -72,6 +82,7 @@ class DialogWidget(QWidget):
         self.setLayout(layout)
 
         self.image.setAlignment(Qt.AlignCenter)
+        self.microphone.setAlignment(Qt.AlignCenter)
         self.name.setAlignment(Qt.AlignCenter)
         #self.image.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.image.resize(200, 400)
@@ -79,6 +90,8 @@ class DialogWidget(QWidget):
         self.speech_dialog_manager.updated.connect(self.update_dialog, type=Qt.QueuedConnection)
         self.active.connect(self.speech_dialog_manager.loop, type=Qt.QueuedConnection)
         self.non_active.connect(self.speech_dialog_manager.deactivate, type=Qt.QueuedConnection)
+        self.speech_dialog_manager.rec_on.connect(self.mic_on, type=Qt.QueuedConnection)
+        self.speech_dialog_manager.rec_off.connect(self.mic_off, type=Qt.QueuedConnection)
 
     def deactivate(self):
         self.non_active.emit()
@@ -93,6 +106,9 @@ class DialogWidget(QWidget):
         self.speech_dialog_manager.set_username(db.get_nickname(user));
 
         self.name.setText(db.get_nickname(user))
+
+        self.image.resize(200, 400)
+        
         if img is not None:
             qpix = QPixmap(img)
 
@@ -100,6 +116,16 @@ class DialogWidget(QWidget):
         else:
             self.image.setText("None")
         self.active.emit()
+
+    def mic_on(self):
+        qpix = QPixmap("mic_green.png")
+        self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
+
+
+    def mic_off(self):
+        qpix = QPixmap("mic_grey.png")
+        self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
+
 
     def clear_table(self):
         while (self.table.rowCount() > 0):

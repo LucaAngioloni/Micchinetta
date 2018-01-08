@@ -19,6 +19,8 @@ class Bot():
         self.negative_predicates = ['rimuovere', 'togliere']
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
+        self.id_err = ['riconoscimento', 'identità', 'persona', 'utente']
+
 
     def set_user_name(self, name):
         self.username = name
@@ -27,7 +29,13 @@ class Bot():
     def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
         self.prodlist_itemoid.extend(['coca-cole', 'acque', 'Coca Cola'])
 
-    def check_fore_completings(self, userask):
+    def check_id_error(self, userask):
+        for word in userask.split():
+            if word.lower() in self.id_err:
+                return True
+        return False
+
+    def check_for_completings(self, userask):
         for word in userask.split():
             if word.lower() in self.completings:
                 return True
@@ -45,7 +53,8 @@ class Bot():
         # bisogna controllare se esiste una versione semplificata della parola,
         # in caso negativo si aggiungono qui i casi speciali
         if item[2] == '<unknown>':
-            if item[0] == 'coca-cole' or 'cocacola' or 'cocacole' or 'Coca Cola':
+            if item[0] == 'coca-cole' or item[0] == 'cocacola' or item[0] == 'cocacole' or item[0] == 'Coca Cola':
+                print("cazzo")
                 return 'coca-cola'
             else:
                 return item[0]
@@ -112,6 +121,7 @@ class Bot():
         for word in phrase:
             if word.isdigit():
                 return int(word)
+        return None
 
     def get_all_products(self, phrase):
         # data una frase, ritorna una lista con tutti i prodotti conosciuti contenuti
@@ -123,8 +133,12 @@ class Bot():
 
     def correct_no_amount(self, list_of_subphrase):
         # corregge casi come ['voglio acqua', 'coca-cola'] -> ['voglio 1 acqua', '1 coca-cola']
-        print("TODO")
-
+        new_list_subphrase = []
+        for phrase in list_of_subphrase:
+            if self.get_amount(phrase) is None:
+                phrase = '1 '+ phrase
+            new_list_subphrase.append(phrase)
+        return new_list_subphrase
 
     def correct_multiple_prod(self, list_of_subphrase):
         # corregge casi come ['voglio 1 acqua 1 coca-cola'] -> ['voglio 1 acqua', '1 coca-cola']
@@ -174,7 +188,9 @@ class Bot():
         list_of_subphrase = parsed_phrase.split(' e ')
         print("list_of_subphrase = ")
         print(list_of_subphrase)
-        #list_of_subphrase = self.correct_no_amount(list_of_subphrase)
+        list_of_subphrase = self.correct_no_amount(list_of_subphrase)
+        print(list_of_subphrase)
+
         list_of_subphrase = self.correct_multiple_prod(list_of_subphrase)
         print(list_of_subphrase)
 
@@ -193,6 +209,8 @@ class Bot():
                 self.request[prod]+=amount
             elif pred[0] in self.negative_predicates and prod in self.prodlist:
                 self.request[prod]-=amount
+                if self.request[prod] < 0:
+                    self.request[prod] = 0
 
     def check_if_request_is_not_empty(self):
         for prod in self.request:
@@ -209,7 +227,7 @@ class Bot():
             print(reply)
             #call(["python3", "speak.py", reply])
             return False, reply, self.request
-        elif self.check_fore_completings(userask):
+        elif self.check_for_completings(userask):
             if self.check_if_request_is_not_empty():
                 reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
                 return True, reply, self.request
@@ -219,9 +237,15 @@ class Bot():
             #call(["python3", "speak.py", reply])
             
             # use API to complete request for the amount
+        elif self.check_id_error(userask):
+            reply = 'Mi dispiace molto non averti riconosciuto, riproviamo.'
+            return None, reply, self.request
         elif self.check_for_products(userask):
             print("ok")
             self.update_request(userask)
+            if sum(self.request.values()) is 0:
+                reply = 'Non hai prodotti nel carrello, cosa ti serve?'
+                return False, reply, self.request
             reply = 'Quindi vuoi '
             cost = 0
             for prod in self.request:
