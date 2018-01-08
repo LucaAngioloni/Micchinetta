@@ -58,7 +58,7 @@ class DialogWidget(QWidget):
 
         self.microphone.resize(50,50)
 
-        qpix = QPixmap("mic_grey.png")
+        qpix = QPixmap("Resources/mic_grey.png")
 
         self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
@@ -118,12 +118,12 @@ class DialogWidget(QWidget):
         self.active.emit()
 
     def mic_on(self):
-        qpix = QPixmap("mic_green.png")
+        qpix = QPixmap("Resources/mic_green.png")
         self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
 
     def mic_off(self):
-        qpix = QPixmap("mic_grey.png")
+        qpix = QPixmap("Resources/mic_grey.png")
         self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
 
