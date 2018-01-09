@@ -22,11 +22,18 @@
 
 import sys
 import pyttsx3
+from pathlib import Path
+
+home = str(Path.home())
+
+idx = 1
+if home == "/Users/LucaAngioloni":  # index of the best voice is different in my computer
+	idx = 0
 
 def init_engine():
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[1].id)
+    engine.setProperty('voice', voices[idx].id)
     return engine
 
 def say(s):
