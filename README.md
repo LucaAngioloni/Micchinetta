@@ -27,6 +27,24 @@ Moreover, the software, to run a simple conversation, will need some capabilitie
 All of this software components have a significant computational cost and will require a decent machine to run on.
 
 ## Interface and Description
+To provide a visual feedback to the user, the system implements a simple interface.
+
+The user will find the application in recognition state, with the interface showing a live view of the scene. Approaching the device, the user will appear on the screen and the recognition will start.
+
+[![recognition_state.png](https://s9.postimg.org/gxlwh5wjz/recognition_state.png)](https://postimg.org/image/7d29ua77v/)
+
+If recognized (matched with one of the known faces) the system gives a visual feedback of the successful recognition:
+
+[![Recognised_feedback.png](https://s9.postimg.org/op2mg8ga7/Recognised_feedback.png)](https://postimg.org/image/4ugku412j/)
+
+the application will then change state, entering the conversation state represented below:
+
+----------------
+
+As soon as the user is recognised, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
+
+While speaking, the conversation and the “bill” will be displayed and updated.
+If the user agrees to the final bill, the machine will commit the transaction and will change its state to idle.
 
 ## Usability Tests
 
