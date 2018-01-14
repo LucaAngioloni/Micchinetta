@@ -11,7 +11,7 @@ With a webcam, the system should recognize known people. After the recognition, 
 - **Andy**: Ok!
 
 ## Goals
-1. Recognise people from a set of known faces
+1. Recognize people from a set of known faces
 2. Sustain a simple conversation with the user to understand his needs
 3. Use existing web API, provided by MICC, for transactions and accountability
 
@@ -38,16 +38,16 @@ If recognized (matched with one of the known faces) the system gives a visual fe
 
 [![Recognition_feedback.png](https://s9.postimg.org/nj37usrjj/Recognition_feedback.png)](https://postimg.org/image/z877irii3/)
 
-the application will then change state, entering the conversation state represented below:
+If multiple faces are present int the scene, the closest (biggest) one is used for identity recognition.
+
+The application will then change state, entering the conversation state represented below:
 
 [![Conversation.png](https://s9.postimg.org/7xlwas2pr/Conversation.png)](https://postimg.org/image/gfvcf498b/)
 
-As soon as the user is recognised, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
+As soon as the user is recognized, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
 
 While speaking, the conversation and the “bill” will be displayed and updated.
 If the user agrees to the final bill, the machine will commit the transaction and will change its state to idle.
-
-
 
 ----------------
 
