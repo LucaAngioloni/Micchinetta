@@ -16,10 +16,11 @@ With a webcam, the system should recognize known people. After the recognition, 
 3. Use existing web API, provided by MICC, for transactions and accountability
 
 ## Technologies
-- The interface is developed with the PyQT Framework using Python
-- Face recognition makes use of a [Python package](https://github.com/ageitgey/face_recognition)
-- Speech recognition uses a [library](https://pypi.python.org/pypi/SpeechRecognition/) based on Google Cloud APIs
+- The interface is developed with the PyQT Framework using Python.
+- Face recognition makes use of a [Python package](https://github.com/ageitgey/face_recognition) and OpenCV for some elaborations and tasks.
+- Speech recognition uses a [library](https://pypi.python.org/pypi/SpeechRecognition/) based on Google Cloud APIs.
 - The app, to be able to speak, will use this other [Python package](https://pypi.python.org/pypi/pyttsx).
+- The Identities along with the face descriptors are maintained in an SQLite database
 
 The system must be connected to the internet to be able to use Google APIs and internal MICC APIs for accountability.
 Moreover, the software, to run a simple conversation, will need some capabilities in natural language processing. Many NLP software packages exist, but not many support Italian language along the English language. [TreeTagger](http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/) is the software chosen.
@@ -39,12 +40,21 @@ If recognized (matched with one of the known faces) the system gives a visual fe
 
 the application will then change state, entering the conversation state represented below:
 
-----------------
+[![Conversation.png](https://s9.postimg.org/75j8butgf/Conversation.png)](https://postimg.org/image/50yvarrtn/)
 
 As soon as the user is recognised, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
 
 While speaking, the conversation and the “bill” will be displayed and updated.
 If the user agrees to the final bill, the machine will commit the transaction and will change its state to idle.
+
+
+
+----------------
+
+Along the main app, an other utility app has been developed to help this system admins to manage the Faces database.
+The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and te credentials for the Transactions APIs).
+
+[![Database_Manager.png](https://s9.postimg.org/bngxq879r/Database_Manager.png)](https://postimg.org/image/g9d1ykssr/)
 
 ## Usability Tests
 
