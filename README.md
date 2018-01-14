@@ -40,10 +40,14 @@ All of this software components have a significant computational cost and will r
 | **Scipy** (Python Package)                                  |Tested on v1.0.0|    Yes   |
 | **TreeTagger**                                              |Tested on v1.0.1|    Yes   |
 | **SpeechRecognition** (Python Package)                      |Tested on v3.8.1|    Yes   |
+| **PyAudio** (Python Package)                               |Tested on v0.2.11|    Yes   |
+| **pyobjc** (Python Package only for MacOS)                  |    >= 4.1      |    Yes   |
+| [**portaudio**](http://www.portaudio.com)                  |Tested on v19.6.0|    Yes   |
+| **pyttsx3** (Python Package)                                |     >= 2.7     |    Yes   |
 | **SQLite**                                                  |      >= 3      |    Yes   |
 | **OpenCV**                                                  |    >= 3.3.1    |    Yes   |
 | [**Face Recognition**](https://github.com/ageitgey/face_recognition) (Python Package)|      >= 3      |    Yes   |
-| QDarkStylesheet (Python Package)|    >= 2.3.1    | Optional |
+| QDarkStylesheet (Python Package)                            |    >= 2.3.1    | Optional |
 
 QDarkStylesheet was used for a better looking GUI (highly recommended) and can be found in [this GitHub Repo](https://github.com/ColinDuquesnoy/QDarkStyleSheet)
 
