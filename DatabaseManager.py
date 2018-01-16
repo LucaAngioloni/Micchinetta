@@ -22,7 +22,7 @@
 
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QTableView, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QTableView, QSizePolicy, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.QtCore import Qt, QFileInfo, QUrl, QFile
@@ -269,6 +269,7 @@ class AddWindow(QWidget):
 
         self.photo_button = QPushButton("Take Photo")
         self.label = CustomLabel('Drop here', self)
+        self.label.setAlignment(Qt.AlignCenter)
         layout = QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.photo_button)
@@ -334,8 +335,18 @@ class CustomLabel(QLabel):
             e.ignore()
  
     def dropEvent(self, e):
-        print("Dropped")
-        print(e.mimeData().urls()[0])
+        try:
+            name_image = face_recognition.load_image_file(e.mimeData().urls()[0].toLocalFile())
+            encoding = face_recognition.face_encodings(name_image)[0]
+        except IndexError:
+            print("The image has no faces in it, or a face can't be found")
+            msgBox = QMessageBox()
+            msgBox.setText("The image has no faces in it, or a face can't be found");
+            msgBox.exec_();
+            return
+        # finally:
+        #     print("Unknown Error")
+        #     return
 
         d = {'Name': "", 'Surname': "", 'nikname': "", 'mail': "",  'password': ""}
         dialog = DataDialog(d)
@@ -345,8 +356,6 @@ class CustomLabel(QLabel):
             d[key] = dialog.le_dict[key].text()
 
         if ret is 1:  # accepted
-            name_image = face_recognition.load_image_file(e.mimeData().urls()[0].toLocalFile())
-            encoding = face_recognition.face_encodings(name_image)[0]
             d['encoding'] = json.dumps(encoding.tolist())
             qi = QFileInfo(e.mimeData().urls()[0].toLocalFile())
             d['id'] = str(uuid.uuid1())
