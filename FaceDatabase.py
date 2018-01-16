@@ -40,7 +40,7 @@ class FaceDatabase:
     def __init__(self):
         self.path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
         self.model_face_encodings = {}
-        self.tol = 0.5
+        self.toll = 0.5
 
     def retrieve(self):
         #preload faces encodings
@@ -60,23 +60,10 @@ class FaceDatabase:
         min_val = np.min(dists)
         min_id = np.argmin(dists)
 
-        if min_val <= self.tol:
+        if min_val <= self.toll:
             return list(self.model_face_encodings.keys())[min_id]
         else:
             return "Unknown"
-        # matches = {}
-
-        # for key in self.model_face_encodings:
-        #     model_encoding = self.model_face_encodings[key]
-        #     matches[key] = face_recognition.compare_faces([model_encoding], face_encoding)[0]
-
-        # id = "Unknown"
-
-        # for key in matches:
-        #     if matches[key]:
-        #         id = key
-
-        # return id
 
     def get_image_for_ID(self, id):
         self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')

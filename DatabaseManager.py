@@ -38,9 +38,7 @@ path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
 db = QSqlDatabase.addDatabase("QSQLITE")
 db.setDatabaseName(path_to_faces + 'faces.db')
 
-import face_recognition
 import cv2
-import numpy as np
 from PyQt5.QtCore import (Qt, QObject, pyqtSignal, QThread)
 
 from FaceDatabase import FaceDatabase
@@ -56,9 +54,13 @@ class FaceRecogniser(QThread):
         self.database.retrieve()
 
         self.currentFrame = None
+        self.userImage = None
         self.active = False
         self.currentUser = None
+        self.toll = 0.5
 
+    def get_user_image(self):
+        return cv2.cvtColor(self.userImage, cv2.COLOR_RGB2BGR)
 
     def get_current_frame(self):
         """Getter for the currentFrame attribute"""
@@ -102,7 +104,8 @@ class FaceRecogniser(QThread):
         face_names = []
 
         count = 0
-        last_id = ""
+        last_enc = None
+        cane = 0
 
         while self.active:
             # Grab a single frame of video
@@ -125,16 +128,18 @@ class FaceRecogniser(QThread):
 
                 face_names = []
                 for face_encoding in face_encodings:
-                    # See if the face is a match for the known face(s)
-                    id = self.database.get_identity(face_encoding)
-                    name = self.database.get_nickname(id)
-                    face_names.append(name)
-                    if id != "Unknown" and id == last_id:
-                        count = count + 1
+                
+                    if last_enc is None:
+                        last_enc = np.copy(face_encoding)
                     else:
-                        last_id = id
-                        count = 0
-
+                        if face_recognition.face_distance([last_enc], face_encoding)[0] <= self.toll:
+                            count = count + 1
+                        else:
+                            last_enc = face_encoding
+                            count = 0
+                    face_names.append("")
+                    
+                self.userImage = frame.copy()
                 # Display the results
                 for (top, right, bottom, left), name in zip(face_locations, face_names):
                     # Scale back up face locations since the frame we detected in was scaled to 1/4 size
@@ -156,14 +161,17 @@ class FaceRecogniser(QThread):
 
                 if count > 10:  # A user has been recognised, activation of acceptance graphical effect (green borders)
                     self.currentFrame = cv2.copyMakeBorder(frame, top=20, bottom=20, left=20, right=20, borderType= cv2.BORDER_CONSTANT, value=[0,220,0] )
+                    print("found 0")
                 
                 if count > 12:  # Final recognition of a user and send the person_identified signal
+                    print("found")
                     self.active = False
                     video_capture.release()
-                    self.currentUser = last_id
+                    self.currentUser = last_enc
                     self.person_identified.emit()
 
                 self.updated.emit()
+
 
 class GetPicture(QWidget):
 
@@ -185,6 +193,7 @@ class GetPicture(QWidget):
     def deactivate(self):
         self.hide()
         self.video_widget.deactivate()
+
 
 class EditWindow(QWidget):
     
@@ -215,6 +224,7 @@ class EditWindow(QWidget):
 
     def update_model(self):
         self.model.select()
+
 
 class DataDialog(QDialog):
     
@@ -283,12 +293,11 @@ class AddWindow(QWidget):
 
         if ret is 1:  # accepted
             d['encoding'] = json.dumps(encoding.tolist())
-            qi = QFileInfo(e.mimeData().urls()[0].toLocalFile())
             d['id'] = str(uuid.uuid1())
             d['im_path'] = d['id'] + ".png"
             im_path = path_to_faces + d['im_path']
-            image_to_save = self.picture.face_recognizer.get_current_frame()
-            # scrivere su disco l'immagine al path im_path
+            image_to_save = self.picture.face_recognizer.get_user_image()
+            cv2.imwrite(im_path, image_to_save)
 
             query = QSqlQuery()
             query.prepare("INSERT into faces values(:id, :Name, :Surname, :nikname, :mail, :password, :im_path, :encoding)")
@@ -359,6 +368,7 @@ class CustomLabel(QLabel):
 
             self.new_id.emit()
  
+
 if __name__ == '__main__':
     db.open()
     app = QApplication(sys.argv)
