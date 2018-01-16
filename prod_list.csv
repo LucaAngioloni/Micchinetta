@@ -1,0 +1,52 @@
+id,name,alias,slug,price,stock,available,category_id
+1,Amica Chips,amica chips,amica-chips,0.3,17,true,3
+2,Croccantini Formaggio Coop,croccantini formaggio,croccantini-formaggio-coop,0.3,0,true,3
+3,Sfogliatine Coop,sfogliatine,sfogliatine-coop,0.3,6,true,3
+4,Biscotto Bahlsen,biscotto bahlsen,biscotto-bahlsen,0.4,0,false,2
+5,Gran Cereale Nocciola,grancereale nocciola,gran-cereale-nocciola,0.4,0,false,2
+6,Gran Cereale Yogurt,grancereale yogurt,gran-cereale-yogurt,0.4,0,false,2
+7,Succo Pesca,succo pesca,succo-pesca,0.3,15,true,1
+8,Succo Pera,succo pera,succo-pera,0.3,11,true,1
+9,Succo Albicocca,succo albicocca,succo-albicocca,0.3,21,true,1
+10,Coca Cola 0.5 L,bottiglia coca-cola,coca-cola,1,0,true,1
+11,Moretti Bottiglia,moretti,moretti-bottiglia-033,1,32,true,1
+12,Heineken, heineken,heineken-025,0.8,35,true,1
+13,Cracker Olio Oliva,cracker oliva,cracker-olio-oliva,0.2,24,true,3
+14,Cracker Salati,cracker salato,cracker-salati,0.2,31,true,3
+15,Plum Cake,plumcake,plum-cake,0.2,0,false,2
+16,Acqua Frasassi,acqua natutale,acqua-frasassi-naturale,0.2,50,true,1
+17,Brioches Mattutine,brioche mattutine,brioches-mattutine,0.3,0,true,2
+18,Martini Rosso,martini rosso,martini-rosso,2,0,false,1
+19,Martini Bianco,martini bianco,martini-bianco,2,0,false,1
+20,Coca Cola Lattina,lattina coca-cola,coca-cola-lattina-033,0.8,24,true,1
+21,Coca Zero Lattina,coca zero lattina,coca-zero-lattina-033,0.8,15,true,1
+22,Fagolosi Grissini,grissini,fagolosi-grissini,0.3,13,true,3
+23,Kinder Cereali,kinder cereale,kinder-cereali,0.5,21,true,2
+24,Duplo,duplo,duplo,0.5,0,true,2
+25,Wafer Nocciola Coop,wafer nocciola,wafer-nocciola-coop,0.35,25,true,2
+26,Kinder Bueno,kinder bueno,kinder-bueno,0.8,8,true,2
+27,Mix Milk,mix milk,mix-milk,0.3,16,true,2
+28,Special K Fondente,special k fondente,special-k-fondente,0.5,0,false,2
+29,Acqua Frasassi,acqua frizzante,acqua-frasassi-frizzante,0.2,56,true,1
+30,Tennent's,tennent's,tennents,1.5,0,true,1
+31,Mix Max (Rosso),mix max,mix-max-rosso,0.3,8,true,2
+32,Cerealix,cerealix,cerealix,0.45,0,true,2
+33,Birra Moretti Lattina,lattina moretti,birra-moretti-lattina-033,1,0,true,1
+34,Popcorn POPZ,popcorn classici,popcorn-popz,1,3,true,3
+35,Tuc Classici,tuc classici,tuc-classici,0.45,22,true,3
+36,Tuc Pomodoro,tuc pomodoro,tuc-pomodoro,0.45,12,true,3
+37,Tarallino,tarallino,tarallino,0.45,36,true,3
+38,Oreo,oreo,oreo,0.5,4,true,2
+39,Fonzies,fonzies,fonzies,0.4,7,true,3
+40,Arachidi,arachidi,arachidi,0.5,12,true,3
+41,Orociok Fondente,orociok fondente,orociok-fondente,0.4,7,true,2
+42,Orociok Nocciola,orociok nocciola,orociok-nocciola,0.4,14,true,2
+43,Ringo Goal Latte,ringo goal,ringo-goal-latte,0.4,5,true,2
+44,Kit Kat piccolo,kit kat,kit-kat-piccolo,0.35,14,true,2
+45,Ichnusa Cruda,ichnusa,ichnusa-cruda-050,2,1,true,1
+46,Orociok Latte,orociok latte,orociok-latte,0.4,15,true,2
+47,Saikebon manzo,saikebon,saikebon-manzo,1.6,4,true,3
+48,Stuzzichina croccante,stuzzichina,stuzzichina-croccante,0.35,18,true,3
+49,Patatine rustiche coop,patatine,patatine-rustiche-coop,1.5,2,true,3
+50,Popcorn POPZ Burro,popcorn burro,popcorn-popz-burro,1,4,true,3
+51,Muffin Mr Day cacao,muffin mr day,muffin-mr-day-cacao,0.45,6,true,2
