@@ -41,6 +41,7 @@ class Bot():
         self.negative_predicates = ['rimuovere', 'togliere']
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
+        self.terminatings = ['fine']
         self.id_err = ['riconoscimento', 'identità', 'persona', 'utente']
 
 
@@ -65,7 +66,13 @@ class Bot():
 
     def check_for_completings(self, userask):
         for word in userask.split():
-            if word.lower() in self.completings:
+            if word in self.completings:
+                return True
+        return False
+
+    def check_for_terminatings(self, userask):
+        for word in userask.split():
+            if word in self.terminatings:
                 return True
         return False
 
@@ -272,9 +279,12 @@ class Bot():
             print(reply)
             #call(["python3", "speak.py", reply])
             return False, reply, self.request
+        elif self.check_for_terminatings(userask) or userask == "no":
+            reply = 'Ciao' + str(self.username)
+            return None, reply, self.request
         elif self.check_for_completings(userask):
             if self.check_if_request_is_not_empty():
-                reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
+                reply = 'Addebito richiesta effettuato. Ciao. ' + str(self.username)
                 return True, reply, self.request
             else:
                 reply = 'Ma ' + str(self.username) + ' ancora non mi hai chiesto nessun prodotto!'
@@ -290,29 +300,39 @@ class Bot():
             if sum(self.request.values()) == 0:
                 reply = 'Non hai prodotti nel carrello, cosa ti serve?'
                 return False, reply, self.request
-            reply = 'Quindi vuoi '
             cost = 0
             missing = []
+            ok = 0
+            reply1 = ''
             for prod in self.request:
                 if self.request[prod] > 0:
                     if int(self.prodlist[prod][1])>=self.request[prod]:
-                        reply = reply + str(self.request[prod]) +' ' + prod + ', '
+                        ok+=1
+                        reply1 = reply1 + str(self.request[prod]) +' ' + prod + ', '
                         cost += float(self.prodlist[prod][0]) * self.request[prod]
                     else:
                         missing.append(prod)
                         self.request[prod]=0
             cost = float("{0:.2f}".format(cost))
             print(cost)
-            reply = reply + 'al prezzo di ' + str(cost) + ' € ?' 
+            re = ''
+            if ok >= len(missing):
+                reply3 = 'al prezzo di ' + str(cost) + ' € ?'
+                re = 'Quindi vuoi ' + reply1 + reply3
+            reply2 = ''
             if len(missing)>1:
-                reply += ' Mi dispiace ma '
+                reply2 += ' Mi dispiace ma '
                 for el in missing:
-                    reply += el + ', '
-                reply += 'sono terminati.'
+                    reply2 += el + ', '
+                reply2 += 'sono terminati.'
             elif len(missing)==1:
-                reply += ' Mi dispiace ma ' + missing[0] + ' è terminato.'
+                reply2 += ' Mi dispiace ma ' + missing[0] + ' è terminato.'
 
-            reply += ' Dì ok per addebitare, o continua a modificare la richiesta.'
+            reply = re + reply2
+            if  sum(self.request.values()) != 0:
+                reply += ' Dì ok per addebitare, o continua a modificare la richiesta.'
+            else:
+                reply += " Vuoi qualcos'altro ?"
             print(self.request)
             print(reply)
             return False, reply, self.request
