@@ -27,6 +27,9 @@ from PyQt5.QtGui import QImage, qRgb, QPixmap
 
 from FaceDatabase import FaceDatabase
 
+import csv
+
+
 
 class DialogWidget(QWidget):
     """
@@ -54,8 +57,9 @@ class DialogWidget(QWidget):
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         self.table.setHorizontalHeaderLabels(['prodotto', 'prezzo'])
 
-        self.list_products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
-
+        #self.products_data = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
+        self.products_data = self.getProd_csv('prod_list.csv')
+        self.speech_dialog_manager.setProdData(self.products_data)
         self.microphone.resize(50,50)
 
         qpix = QPixmap("Resources/mic_grey.png")
@@ -92,6 +96,17 @@ class DialogWidget(QWidget):
         self.non_active.connect(self.speech_dialog_manager.deactivate, type=Qt.QueuedConnection)
         self.speech_dialog_manager.rec_on.connect(self.mic_on, type=Qt.QueuedConnection)
         self.speech_dialog_manager.rec_off.connect(self.mic_off, type=Qt.QueuedConnection)
+
+
+    def getProd_csv(self, path_to_csv):
+        prod_data_dict = {}
+
+        with open(path_to_csv) as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                prod_data_dict[row['alias']] = row['price'], row['stock']
+            return prod_data_dict
+
 
     def deactivate(self):
         self.non_active.emit()
@@ -137,11 +152,11 @@ class DialogWidget(QWidget):
         for product in bill:
 
             if bill[product] > 0:
-                price = float("{0:.2f}".format(bill[product]*self.list_products[product]))
-                string_prod = str(product) + ' ' + 'X' + str(bill[product])
+                price = float("{0:.2f}".format(bill[product]*float(self.products_data[product][0])))
+                str_prod = str(product) + ' ' + 'X' + str(bill[product])
                 rowPosition = self.table.rowCount()
                 self.table.insertRow(rowPosition)
-                self.table.setItem(rowPosition , 0, QTableWidgetItem(string_prod))
+                self.table.setItem(rowPosition , 0, QTableWidgetItem(str_prod))
                 self.table.setItem(rowPosition , 1, QTableWidgetItem(str(price)))
 
     # slot called whenever Speech_DialogManager has updates. Update the view

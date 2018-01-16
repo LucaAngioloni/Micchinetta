@@ -29,8 +29,8 @@ class Bot():
     def __init__(self, products):
         self.username = ''
         self.prodlist = products
-        self.prodlist_itemoid = list(self.prodlist.keys())
-        self.add_itemoid()
+        #self.prodlist_itemoid = list(self.prodlist.keys())
+        self.prodlist_itemoid = self.add_itemoid()
         self.request = Counter(self.prodlist.keys())
         self.request.subtract(self.request) # sottraggo se stesso cosi da avere un dict con keys = nome prodotti, e value=0
 
@@ -49,7 +49,13 @@ class Bot():
         print(self.username)
 
     def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
-        self.prodlist_itemoid.extend(['coca-cole', 'acque', 'Coca Cola'])
+        products = []
+        for item in self.prodlist:
+            for itemoid in item.split():
+                products.append(itemoid)
+        #products.extend(['coca-cole', 'Coca Cola'])
+        return products
+
 
     def check_id_error(self, userask):
         for word in userask.split():
@@ -65,10 +71,14 @@ class Bot():
 
     def check_for_products(self, sentence):
         # torna True se la frase contiene prodotti o sinonimi di prodotti
-        for word in sentence.split():
-            if word.lower() in self.prodlist_itemoid:
+        for prod in self.prodlist_itemoid:
+            if prod in sentence:
                 return True
         return False
+        # for word in sentence.split():
+        #     if word.lower() in self.prodlist_itemoid:
+        #         return True
+        # return False
 
     def check_itemoid(self, item):
         # una volta tree taggata una frase, per poterla sostituire con la versione semplificata,
@@ -80,6 +90,9 @@ class Bot():
                 return 'coca-cola'
             else:
                 return item[0]
+        elif '|' in item[2]:
+            splitted = item[2].split('|')
+            return splitted[0]
         else:
             if item[0] == 'arachidi':
                 return 'arachidi'
@@ -133,10 +146,14 @@ class Bot():
 
     def get_prod(self, phrase):
         # data una frase, ritorna il primo prodotto conosciuto trovato
-        for word in phrase.split():
-            if word.lower() in self.prodlist:
-                return word.lower()
+        for prod in self.prodlist:
+            if prod in phrase:
+                return prod
         return False
+        # for word in phrase.split():
+        #     if word.lower() in self.prodlist:
+        #         return word.lower()
+        # return False
 
     def get_amount(self, phrase):
         # data una frase, ritorna il primo digit trovato
@@ -148,9 +165,9 @@ class Bot():
     def get_all_products(self, phrase):
         # data una frase, ritorna una lista con tutti i prodotti conosciuti contenuti
         prod = []
-        for word in phrase.split():
-            if word in self.prodlist:
-                prod.append(word)
+        for item in self.prodlist:
+            if item in phrase:
+                prod.append(item)
         return prod
 
     def correct_no_amount(self, list_of_subphrase):
@@ -192,6 +209,8 @@ class Bot():
             res = self.check_itemoid(item)
             if item[2] == 'un' or item[2] == 'una':
                 seq_phrase.append('uno')
+            elif item[0] in self.prodlist:
+                seq_phrase.append(item[0])
             elif res =='':
                 seq_phrase.append(item[2])
             else:
@@ -199,11 +218,15 @@ class Bot():
 
         # ricostruisco una frase convertendo numeri scritti in lettere in numeri
         parsed_phrase = ''
+        print("item start")
         for item in seq_phrase:
-            if item is not 'e':
+            print(item)
+            if item != 'e' and item != 'biscotto':
                 parsed_phrase += self.converter.let2num(item) + ' '
+                print(parsed_phrase)
             else:
                 parsed_phrase += item + ' '
+        print("item end")
 
         print("parsed = " + parsed_phrase)
         # divido quando c'è una "e", pesumibilmente ogni sottofrase ha un significato diverso
@@ -244,7 +267,7 @@ class Bot():
 
         userask = userask.replace("'", " ")
 
-        if userask.lower() is "impossibile capire" or userask.lower() is 'richieste speech-to-text terminate':
+        if userask.lower() == "impossibile capire" or userask.lower() == 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
             #call(["python3", "speak.py", reply])
@@ -256,7 +279,6 @@ class Bot():
             else:
                 reply = 'Ma ' + str(self.username) + ' ancora non mi hai chiesto nessun prodotto!'
                 return False, reply, self.request
-            #call(["python3", "speak.py", reply])
             
             # use API to complete request for the amount
         elif self.check_id_error(userask):
@@ -265,27 +287,38 @@ class Bot():
         elif self.check_for_products(userask):
             print("ok")
             self.update_request(userask)
-            if sum(self.request.values()) is 0:
+            if sum(self.request.values()) == 0:
                 reply = 'Non hai prodotti nel carrello, cosa ti serve?'
                 return False, reply, self.request
             reply = 'Quindi vuoi '
             cost = 0
+            missing = []
             for prod in self.request:
                 if self.request[prod] > 0:
-                    reply = reply + str(self.request[prod]) +' ' + prod + ' '
-                    cost += self.prodlist[prod] * self.request[prod]
+                    if int(self.prodlist[prod][1])>=self.request[prod]:
+                        reply = reply + str(self.request[prod]) +' ' + prod + ', '
+                        cost += float(self.prodlist[prod][0]) * self.request[prod]
+                    else:
+                        missing.append(prod)
+                        self.request[prod]=0
             cost = float("{0:.2f}".format(cost))
             print(cost)
-            reply = reply + 'al prezzo di ' + str(cost) + ' € ?' + ' Dì ok per addebitare, o continua a modificare la richiesta'
-            #self.say(reply)
-            #call(["python3", "speak.py", reply])
+            reply = reply + 'al prezzo di ' + str(cost) + ' € ?' 
+            if len(missing)>1:
+                reply += ' Mi dispiace ma '
+                for el in missing:
+                    reply += el + ', '
+                reply += 'sono terminati.'
+            elif len(missing)==1:
+                reply += ' Mi dispiace ma ' + missing[0] + ' è terminato.'
+
+            reply += ' Dì ok per addebitare, o continua a modificare la richiesta.'
             print(self.request)
             print(reply)
             return False, reply, self.request
         else:
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
-            #call(["python3", "speak.py", reply])
             return False, reply, self.request
 
 

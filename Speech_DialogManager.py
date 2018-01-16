@@ -45,8 +45,11 @@ class Speech_DialogManager(QThread):
         self.active = False
 
         self.recognizer = sr.Recognizer()
-        self.products = {"lay's": 1, "arachidi": 2, "coca-cola": 1.60, "acqua": 1, "birra": 2} # da prendere con apis
         self.username = ''
+
+
+    def setProdData(self, products_data):
+        self.products = products_data
 
     def set_username(self, name):
         self.username = name
@@ -101,11 +104,11 @@ class Speech_DialogManager(QThread):
         self.sayhi(greetings)
 
         while self.active:
-            user_says = self.record_and_understand() # da sostituire con record_and_understand
-            #user_says = self.write() # da sostituire con record_and_understand
+            #user_says = self.record_and_understand() # da sostituire con record_and_understand
+            user_says = self.write() # da sostituire con record_and_understand
 
-            self.updated.emit(user_says, 0)
-            val, reply, bill = self.bot.reply(user_says)
+            self.updated.emit(user_says.lower(), 0)
+            val, reply, bill = self.bot.reply(user_says.lower())
             self.updated.emit(reply, bill)
             call(["python3", "speak.py", reply])
 
