@@ -40,7 +40,7 @@ class MainWindow(QWidget):
 
     def init_ui(self):
         """Method to initialize the UI: layouts and components"""
-        self.setWindowTitle("Michinetta")
+        self.setWindowTitle("Micchinetta")
 
         self.stackLayout = QStackedLayout()
 
