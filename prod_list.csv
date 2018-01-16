@@ -14,7 +14,7 @@ id,name,alias,slug,price,stock,available,category_id
 13,Cracker Olio Oliva,cracker oliva,cracker-olio-oliva,0.2,24,true,3
 14,Cracker Salati,cracker salato,cracker-salati,0.2,31,true,3
 15,Plum Cake,plumcake,plum-cake,0.2,0,false,2
-16,Acqua Frasassi,acqua natutale,acqua-frasassi-naturale,0.2,50,true,1
+16,Acqua Frasassi,acqua naturale,acqua-frasassi-naturale,0.2,50,true,1
 17,Brioches Mattutine,brioche mattutine,brioches-mattutine,0.3,0,true,2
 18,Martini Rosso,martini rosso,martini-rosso,2,0,false,1
 19,Martini Bianco,martini bianco,martini-bianco,2,0,false,1
