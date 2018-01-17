@@ -47,6 +47,6 @@ id,name,alias,slug,price,stock,available,category_id
 46,Orociok Latte,orociok latte,orociok-latte,0.4,15,true,2
 47,Saikebon manzo,saikebon,saikebon-manzo,1.6,4,true,3
 48,Stuzzichina croccante,stuzzichina,stuzzichina-croccante,0.35,18,true,3
-49,Patatine rustiche coop,patatine,patatine-rustiche-coop,1.5,2,true,3
+49,Patatine rustiche coop,patatine rustiche,patatine-rustiche-coop,1.5,2,true,3
 50,Popcorn POPZ Burro,popcorn burro,popcorn-popz-burro,1,4,true,3
 51,Muffin Mr Day cacao,muffin mr day,muffin-mr-day-cacao,0.45,6,true,2

@@ -216,7 +216,7 @@ class Bot():
             res = self.check_itemoid(item)
             if item[2] == 'un' or item[2] == 'una':
                 seq_phrase.append('uno')
-            elif item[0] in self.prodlist:
+            elif item[0] in self.prodlist_itemoid:
                 seq_phrase.append(item[0])
             elif res =='':
                 seq_phrase.append(item[2])
@@ -245,6 +245,7 @@ class Bot():
 
         list_of_subphrase = self.correct_multiple_prod(list_of_subphrase)
         print(list_of_subphrase)
+
 
         corrected_subphrase = self.set_request_kind(list_of_subphrase)
 
