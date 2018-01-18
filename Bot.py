@@ -266,9 +266,10 @@ class Bot():
     def replace_itemoid(self, userask):
         word_list = userask.split()
         for word in word_list:
-            for item in self.prodlist_itemoid:
-                if editdistance.eval(word, item)<3:
-                    userask = userask.replace(word, item)
+            if len(word)>2:
+                for item in self.prodlist_itemoid:
+                    if editdistance.eval(word, item)<3:
+                        userask = userask.replace(word, item)
         return userask
 
     def replace_numbers(self, userask):
