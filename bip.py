@@ -1,3 +1,5 @@
 from playsound import playsound
 
-playsound("Resources/song.mp3")
+
+
+playsound("Resources/bip.wav")

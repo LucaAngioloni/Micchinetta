@@ -60,6 +60,7 @@ class Speech_DialogManager(QThread):
     def record_and_understand(self):
         with sr.Microphone() as source:
             print("Say something!")
+            call(["python3", "bip.py"])
             self.rec_on.emit()
             audio = self.recognizer.listen(source, timeout=6.0)
         print("stopped recording")
