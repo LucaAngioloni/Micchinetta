@@ -38,8 +38,8 @@ class Bot():
         self.tagger = TreeTagger(language='italian')
         self.converter = Converter()
 
-        self.positive_predicates = ['volere']
-        self.negative_predicates = ['rimuovere', 'togliere']
+        self.positive_predicates = ['volere', 'aggiungere']
+        self.negative_predicates = ['rimuovere', 'togliere', 'cancellare']
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
         self.terminatings = ['fine', 'tutto', 'termina']
@@ -313,7 +313,7 @@ class Bot():
 
     def reply(self, userask):
 
-        userask = userask.replace("'", " ").replace("alla", " ").replace("al", "").replace("ai", "").replace("di", "").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
+        userask = userask.replace("'", " ").replace("alla", " ").replace("al ", "").replace("ai", "").replace("di", "").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
 
         userask = self.replace_numbers(userask)
         userask = self.replace_itemoid(userask)
