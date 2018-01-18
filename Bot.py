@@ -331,7 +331,11 @@ class Bot():
                         cost += float(self.prodlist[prod][0]) * self.request[prod]
                     else:
                         missing.append(prod)
-                        self.request[prod]=0
+                        self.request[prod] = int(self.prodlist[prod][1])
+                        if self.request[prod] != 0:
+                            ok+=1
+                            reply1 = reply1 + str(self.request[prod]) +' ' + prod + ', '
+                            cost += float(self.prodlist[prod][0]) * self.request[prod]
             cost = float("{0:.2f}".format(cost))
             print(cost)
             re = ''
@@ -343,9 +347,9 @@ class Bot():
                 reply2 += ' Mi dispiace ma '
                 for el in missing:
                     reply2 += el + ', '
-                reply2 += 'sono terminati.'
+                reply2 += 'non sono disponibili nelle quantità richieste. Ho inserito le disponibili.'
             elif len(missing)==1:
-                reply2 += ' Mi dispiace ma ' + missing[0] + ' è terminato.'
+                reply2 += ' Mi dispiace ma ' + missing[0] + ' non è disponibile nella quantità richiesta. Ho inserito la quantità disponibile.'
 
             reply = re + reply2
             if  sum(self.request.values()) != 0:
