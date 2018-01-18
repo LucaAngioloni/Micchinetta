@@ -42,7 +42,7 @@ class Bot():
         self.negative_predicates = ['rimuovere', 'togliere']
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
-        self.terminatings = ['fine']
+        self.terminatings = ['fine', 'tutto', 'termina']
         self.id_err = ['riconoscimento', 'identità', 'persona', 'utente', 'sono']
 
 
@@ -217,7 +217,6 @@ class Bot():
                 if item in phrase:
                     idx = phrase.find(item)
                     items[idx] = item
-            print(items)
             if len(list(items.keys())) > 1:
                 start_idx = 0
                 keys = sorted(items.keys())
@@ -246,19 +245,17 @@ class Bot():
                 seq_phrase.append(res)
 
         # ricostruisco una frase convertendo numeri scritti in lettere in numeri
-        parsed_phrase = ''
-        for item in seq_phrase:    
-            parsed_phrase += item + ' '
+        parsed_phrase = ' '.join(seq_phrase)
+
 
         print("parsed = " + parsed_phrase)
         # divido quando c'è una "e", pesumibilmente ogni sottofrase ha un significato diverso
         list_of_subphrase = parsed_phrase.split(' e ')
         print("list_of_subphrase = ")
         print(list_of_subphrase)
+
         list_of_subphrase = self.correct_no_amount(list_of_subphrase)
         print(list_of_subphrase)
-
-
 
         list_of_subphrase = self.correct_multiple_prod(list_of_subphrase)
         print(list_of_subphrase)
