@@ -96,6 +96,8 @@ class Bot():
                 return 'coca-cola'
             else:
                 return item[0]
+        elif item[2]=='@card@':
+            return item[0]
         elif '|' in item[2]:
             splitted = item[2].split('|')
             return splitted[0]
@@ -275,6 +277,8 @@ class Bot():
     def replace_numbers(self, userask):
         converted_phrase = ''
         for item in userask.split():
+            if item =='un' or item =='una':
+                item = 'uno'
             if item != 'e' and item != 'biscotto':
                 converted_phrase += self.converter.let2num(item) + ' '
             else:
