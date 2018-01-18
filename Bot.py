@@ -24,6 +24,7 @@ from treetagger import TreeTagger
 
 from collections import Counter
 from Converter import Converter
+import editdistance
 
 class Bot():
     def __init__(self, products):
@@ -42,19 +43,18 @@ class Bot():
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
         self.terminatings = ['fine']
-        self.id_err = ['riconoscimento', 'identità', 'persona', 'utente']
+        self.id_err = ['riconoscimento', 'identità', 'persona', 'utente', 'sono']
 
 
     def set_user_name(self, name):
         self.username = name
         print(self.username)
 
-    def add_itemoid(self): # aggiungere qui sinonimi e plurali di prodotti
+    def add_itemoid(self): 
         products = []
         for item in self.prodlist:
             for itemoid in item.split():
                 products.append(itemoid)
-        #products.extend(['coca-cole', 'Coca Cola'])
         return products
 
 
@@ -271,9 +271,21 @@ class Bot():
                 return True
         return False
 
+    def replace_itemoid(self, userask):
+        word_list = userask.split()
+        for word in word_list:
+            for item in self.prodlist_itemoid:
+                if editdistance.eval(word, item)<3:
+                    userask = userask.replace(word, item)
+        return userask
+
+
     def reply(self, userask):
 
-        userask = userask.replace("'", " ")
+        userask = userask.replace("'", " ").replace("alla", " ").replace("al", "").replace("ai", "").replace("di", "")
+
+
+        userask = self.replace_itemoid(userask)
 
         if userask.lower() == "impossibile capire" or userask.lower() == 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
