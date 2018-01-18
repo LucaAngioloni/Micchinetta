@@ -93,7 +93,6 @@ class Bot():
         # in caso negativo si aggiungono qui i casi speciali
         if item[2] == '<unknown>':
             if item[0] == 'coca-cole' or item[0] == 'cocacola' or item[0] == 'cocacole' or item[0] == 'Coca Cola':
-                print("cazzo")
                 return 'coca-cola'
             else:
                 return item[0]
@@ -225,15 +224,8 @@ class Bot():
 
         # ricostruisco una frase convertendo numeri scritti in lettere in numeri
         parsed_phrase = ''
-        print("item start")
-        for item in seq_phrase:
-            print(item)
-            if item != 'e' and item != 'biscotto':
-                parsed_phrase += self.converter.let2num(item) + ' '
-                print(parsed_phrase)
-            else:
-                parsed_phrase += item + ' '
-        print("item end")
+        for item in seq_phrase:    
+            parsed_phrase += item + ' '
 
         print("parsed = " + parsed_phrase)
         # divido quando c'è una "e", pesumibilmente ogni sottofrase ha un significato diverso
@@ -279,12 +271,21 @@ class Bot():
                     userask = userask.replace(word, item)
         return userask
 
+    def replace_numbers(self, userask):
+        converted_phrase = ''
+        for item in userask.split():
+            if item != 'e' and item != 'biscotto':
+                converted_phrase += self.converter.let2num(item) + ' '
+            else:
+                converted_phrase += item + ' '
+        return converted_phrase
+
 
     def reply(self, userask):
 
         userask = userask.replace("'", " ").replace("alla", " ").replace("al", "").replace("ai", "").replace("di", "")
 
-
+        userask = self.replace_numbers(userask)
         userask = self.replace_itemoid(userask)
 
         if userask.lower() == "impossibile capire" or userask.lower() == 'richieste speech-to-text terminate':
