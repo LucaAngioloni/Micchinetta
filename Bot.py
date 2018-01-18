@@ -288,7 +288,7 @@ class Bot():
 
     def reply(self, userask):
 
-        userask = userask.replace("'", " ").replace("alla", " ").replace("al", "").replace("ai", "").replace("di", "")
+        userask = userask.replace("'", " ").replace("alla", " ").replace("al", "").replace("ai", "").replace("di", "").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
 
         userask = self.replace_numbers(userask)
         userask = self.replace_itemoid(userask)
@@ -303,7 +303,7 @@ class Bot():
             return None, reply, self.request
         elif self.check_for_completings(userask):
             if self.check_if_request_is_not_empty():
-                reply = 'Addebito richiesta effettuato. Ciao. ' + str(self.username)
+                reply = 'Addebito richiesta effettuato. Ciao ' + str(self.username)
                 return True, reply, self.request
             else:
                 reply = 'Ma ' + str(self.username) + ' ancora non mi hai chiesto nessun prodotto!'

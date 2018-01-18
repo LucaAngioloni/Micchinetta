@@ -98,7 +98,7 @@ class Speech_DialogManager(QThread):
 
     def run(self):
         self.active = True
-        greetings = "Ciao "+str(self.username)+" cosa ti serve?"
+        greetings = "Ciao "+str(self.username)+" cosa ti serve? Parla dopo il bip."
 
         self.updated.emit(greetings, 0)
         self.sayhi(greetings)
