@@ -321,7 +321,6 @@ class Bot():
         if userask.lower() == "impossibile capire" or userask.lower() == 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
-            #call(["python3", "speak.py", reply])
             return False, reply, self.request
         elif self.check_for_terminatings(userask) or userask == "no":
             reply = 'Ciao' + str(self.username)
@@ -339,7 +338,7 @@ class Bot():
             reply = 'Mi dispiace molto non averti riconosciuto, riproviamo.'
             return None, reply, self.request
         elif self.check_for_products(userask):
-            print("ok")
+            print("Prodotto rilevato, inizio parsing...")
             self.update_request(userask)
             if sum(self.request.values()) == 0:
                 reply = 'Non hai prodotti nel carrello, cosa ti serve?'
@@ -362,7 +361,6 @@ class Bot():
                             reply1 = reply1 + str(self.request[prod]) +' ' + prod + ', '
                             cost += float(self.prodlist[prod][0]) * self.request[prod]
             cost = float("{0:.2f}".format(cost))
-            print(cost)
             re = ''
             if ok >= len(missing):
                 reply3 = 'al prezzo di ' + str(cost) + ' € ?'
