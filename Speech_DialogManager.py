@@ -45,6 +45,7 @@ class Speech_DialogManager(QThread):
         self.active = False
 
         self.recognizer = sr.Recognizer()
+        self.recognizer.energy_threshold = 2000
         self.username = ''
 
 
@@ -105,8 +106,8 @@ class Speech_DialogManager(QThread):
         self.sayhi(greetings)
 
         while self.active:
-            #user_says = self.record_and_understand() # da sostituire con record_and_understand
-            user_says = self.write() # da sostituire con record_and_understand
+            user_says = self.record_and_understand() # da sostituire con record_and_understand
+            #user_says = self.write() # da sostituire con record_and_understand
 
             self.updated.emit(user_says.lower(), 0)
             val, reply, bill = self.bot.reply(user_says.lower())

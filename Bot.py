@@ -323,7 +323,7 @@ class Bot():
             print(reply)
             return False, reply, self.request
         elif self.check_for_terminatings(userask) or userask == "no":
-            reply = 'Ciao' + str(self.username)
+            reply = 'Ciao ' + str(self.username)
             return None, reply, self.request
         elif self.check_for_completings(userask):
             if self.check_if_request_is_not_empty():
