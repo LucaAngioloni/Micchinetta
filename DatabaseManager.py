@@ -57,7 +57,7 @@ class FaceRecogniser(QThread):
         self.userImage = None
         self.active = False
         self.currentUser = None
-        self.toll = 0.5
+        self.toll = 0.55
 
     def get_user_image(self):
         return cv2.cvtColor(self.userImage, cv2.COLOR_RGB2BGR)
