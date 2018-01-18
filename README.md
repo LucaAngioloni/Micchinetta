@@ -69,6 +69,7 @@ The script `DatabaseManager.py` starts this graphical application that allows to
 | **TreeTagger**                                              |Tested on v1.0.1|    Yes   |
 | **SpeechRecognition** (Python Package)                      |Tested on v3.8.1|    Yes   |
 | **PyAudio** (Python Package)                               |Tested on v0.2.11|    Yes   |
+| **editdistance** (Python Package)                           |     >= 0.4     |    Yes   |
 | **pyobjc** (Python Package only for MacOS)                  |    >= 4.1      |    Yes   |
 | [**portaudio**](http://www.portaudio.com)                  |Tested on v19.6.0|    Yes   |
 | **pyttsx3** (Python Package)                                |     >= 2.7     |    Yes   |
