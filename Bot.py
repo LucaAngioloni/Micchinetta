@@ -209,6 +209,27 @@ class Bot():
         return final_list
 
 
+    def correct_ultra_no_amount(self, list_of_subphrase):
+        new_list = []
+        for phrase in list_of_subphrase:
+            items = {}
+            for item in self.prodlist:
+                if item in phrase:
+                    idx = phrase.find(item)
+                    items[idx] = item
+            print(items)
+            if len(list(items.keys())) > 1:
+                start_idx = 0
+                keys = sorted(items.keys())
+                for item_idx in keys:
+                    idx = item_idx + len(items[item_idx])
+                    new_list.append(phrase[start_idx:idx])
+                    start_idx = idx
+            else:
+                new_list.append(phrase)
+        return new_list
+
+
     def parse_input(self, usersaid):
         p = self.tagger.tag(usersaid)
         # faccio una lista degli elementi parsati per semplificare la frase
@@ -237,9 +258,16 @@ class Bot():
         list_of_subphrase = self.correct_no_amount(list_of_subphrase)
         print(list_of_subphrase)
 
+
+
         list_of_subphrase = self.correct_multiple_prod(list_of_subphrase)
         print(list_of_subphrase)
 
+        list_of_subphrase = self.correct_ultra_no_amount(list_of_subphrase)
+        print(list_of_subphrase)
+
+        list_of_subphrase = self.correct_no_amount(list_of_subphrase)
+        print(list_of_subphrase)
 
         corrected_subphrase = self.set_request_kind(list_of_subphrase)
 
