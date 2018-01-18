@@ -40,7 +40,7 @@ class FaceDatabase:
     def __init__(self):
         self.path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
         self.model_face_encodings = {}
-        self.toll = 0.5
+        self.toll = 0.55
 
     def retrieve(self):
         #preload faces encodings
