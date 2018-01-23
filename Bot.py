@@ -25,6 +25,8 @@ from treetagger import TreeTagger
 from collections import Counter
 from Converter import Converter
 import editdistance
+import re as regexp
+
 
 class Bot():
     def __init__(self, products):
@@ -324,6 +326,11 @@ class Bot():
     def reply(self, userask):
 
         userask = userask.replace("'", " ").replace(" alla ", " ").replace(" al ", " ").replace(" ai ", " ").replace(" di ", " ").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
+
+        list_userask = regexp.split('(\d+)', userask)
+
+        userask = ' '.join(list_userask)
+        print(userask)
 
         userask = self.replace_numbers(userask)
         print(userask)
