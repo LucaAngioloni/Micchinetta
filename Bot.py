@@ -294,9 +294,15 @@ class Bot():
         word_list = userask.split()
         for word in word_list:
             if len(word)>2:
+                min_item = word
+                min_dist = 1000
                 for item in self.prodlist_itemoid:
-                    if editdistance.eval(word, item)<3:
-                        userask = userask.replace(word, item)
+                    dist = editdistance.eval(word, item)
+                    if dist<3:
+                        if dist < min_dist:
+                            min_dist = dist
+                            min_item = item
+                userask = userask.replace(word, min_item)
         return userask
 
     def replace_numbers(self, userask):
@@ -304,8 +310,12 @@ class Bot():
         for item in userask.split():
             if item =='un' or item =='una':
                 item = 'uno'
-            if item != 'e' and item != 'biscotto':
-                converted_phrase += self.converter.let2num(item) + ' '
+            if item != 'e':
+                num = self.converter.let2num(item)
+                if num.isdigit():
+                    converted_phrase += num + ' '
+                else:
+                    converted_phrase += item + ' '
             else:
                 converted_phrase += item + ' '
         return converted_phrase
@@ -313,10 +323,12 @@ class Bot():
 
     def reply(self, userask):
 
-        userask = userask.replace("'", " ").replace("alla", " ").replace("al ", "").replace("ai", "").replace("di", "").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
+        userask = userask.replace("'", " ").replace(" alla ", " ").replace(" al ", " ").replace(" ai ", " ").replace(" di ", " ").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
 
         userask = self.replace_numbers(userask)
+        print(userask)
         userask = self.replace_itemoid(userask)
+        print(userask)
 
         if userask.lower() == "impossibile capire" or userask.lower() == 'richieste speech-to-text terminate':
             reply = 'Scusa non ho capito. Ripeti perfavore.'
