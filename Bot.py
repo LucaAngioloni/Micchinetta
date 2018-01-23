@@ -39,11 +39,11 @@ class Bot():
         self.converter = Converter()
 
         self.positive_predicates = ['volere', 'aggiungere']
-        self.negative_predicates = ['rimuovere', 'togliere', 'cancellare']
+        self.negative_predicates = ['rimuovere', 'togliere', 'cancellare', 'eliminare']
         self.predicates = self.positive_predicates + self.negative_predicates
         self.completings = ['ok']
-        self.terminatings = ['fine', 'tutto', 'termina']
-        self.id_err = ['riconoscimento', 'identità', 'persona', 'utente', 'sono']
+        self.terminatings = ['fine', 'tutto', 'termina', 'annulla', 'annullare']
+        self.id_err = ['riconoscimento', 'identità', 'persona', 'utente', 'sono', 'faccia']
 
 
     def set_user_name(self, name):
@@ -165,7 +165,7 @@ class Bot():
 
     def get_amount(self, phrase):
         # data una frase, ritorna il primo digit trovato
-        for word in phrase:
+        for word in phrase.split():
             if word.isdigit():
                 return int(word)
         return None
