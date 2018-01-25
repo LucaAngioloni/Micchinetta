@@ -1,6 +1,6 @@
 # Micchinetta
 
-![logo_micchinetta.jpg](./images/logo_micchinetta.jpg)
+![logo_micchinetta.jpg](./Images/logo_micchinetta.jpg)
 
 ## Assignment
 Deploy an application interface using both face and speech recognition to achieve a transaction between the user and a vending machine. 
@@ -32,17 +32,17 @@ To provide a visual feedback to the user, the system implements a simple interfa
 
 The user will find the application in recognition state, with the interface showing a live view of the scene. Approaching the device, the user will appear on the screen and the recognition will start.
 
-![Recognition.png](./images/Recognition.png)
+![Recognition.png](./Images/Recognition.png)
 
 If recognized (matched with one of the known faces) the system gives a visual feedback of the successful recognition:
 
-![Recognition_feedback.png](./images/Recognition_feedback.png)
+![Recognition_feedback.png](./Images/Recognition_feedback.png)
 
 If multiple faces are present int the scene, the closest (biggest) one is used for identity recognition.
 
 The application will then change state, entering the conversation state represented below:
 
-![Conversation.png](./images/Conversation.png)
+![Conversation.png](./Images/Conversation.png)
 
 As soon as the user is recognized, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
 
@@ -54,7 +54,7 @@ If the user agrees to the final bill, the machine will commit the transaction an
 Along the main app, an other utility app has been developed to help this system admins to manage the Faces database.
 The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and te credentials for the Transactions APIs).
 
-![Database_Manager.png](./images/Database_Manager.png)
+![Database_Manager.png](./Images/Database_Manager.png)
 
 ## Usability Tests
 
