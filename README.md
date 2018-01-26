@@ -52,7 +52,7 @@ If the user agrees to the final bill, the machine will commit the transaction an
 ----------------
 
 Along the main app, an other utility app has been developed to help this system admins to manage the Faces database.
-The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and te credentials for the Transactions APIs).
+The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and the credentials for the Transactions APIs). Face images can be added with drag and drop or using the webcam to capture the face of the new user.
 
 ![Database_Manager.png](./Images/Database_Manager.png)
 
