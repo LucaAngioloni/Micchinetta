@@ -88,13 +88,21 @@ Moreover we provided the users the chance to express some optional comments for 
 ### Results
 *Error trials*: We gathered 13 users, each tried 7 task, so the total amount of trials is 91. Just 12 of these tasks failed, but only 2 resulted in a critical failure due to the lack of connection to internet, the other 4 where due to fails in speech-recognition and where recovered only by repeating the request.
 
-Figure 10 shows that users’ opinions vary when asked if the latency between MICChinetta’s replies are too high. This may be linked to the fact that reply time varies with respect to internet connection. Moreover some user aknowledge the compu- tational efficiency required for speech recog- nition and pos-tagging and replies are bi- ased.
+![fig10-11](./Images/fig10-11.png)
+
+Figure 10 shows that users’ opinions vary when asked if the latency between MICChinetta’s replies are too high. This may be linked to the fact that reply time varies with respect to internet connection. Moreover some user aknowledge the compu- tational efficiency required for speech recog- nition and pos-tagging and replies are biased.
 
 Figure 11 shows that the majority of the users would prefer to use the VUI instead of the mobile phone app.
 
+![fig12-13](./Images/fig12-13.png)
+
 Figure 12 shows that most of the users found the system to be self explanatory, this is indeed crucial using a never-seen application. Moreover users agree about the pleasentness of the Graphical Interface demonstrated in Figure 13.
 
+![fig14-15](./Images/fig14-15.png)
+
 Figure 14 affirms that face recognition was definitely working, this is a factor in the trust placed by the user, reported in Figure 15, and confirmed in the next figures.
+
+![fig16-17](./Images/fig16-17.png)
 
 Figure 16 and Figure 17 are a good demonstration of the conversation skills of the system, it can understand what users ask and answers correctly. This is maybe the best result we had hoped for in devel- oping MICChinetta.
 
