@@ -57,23 +57,22 @@ The script `DatabaseManager.py` starts this graphical application that allows to
 ![Database_Manager.png](./Images/Database_Manager.png)
 
 ## Usability Tests
-The scenario of this tests will be a well known and restricted context, in fact MICChinetta will be used by people attending the MICC laboratory, however the utility of the application transcends from this and the results obtained will be valid also in other similar scenarios.
+The scenario of this tests is a well known and restricted context: the MICC laboratory.
+However the usefulness of this system transcends from this and the results obtained are valid also in other similar scenarios.
 
 ### Environment and tasks
-We placed our system right by the vending machine at MICC, providing it an internet connection (not really reliable that
-particular day due to work in progress) and installing all necessary software. We gathered all available staff, in couples or alone, and we read them a list of tasks, briefly explaining the application whenever someone had no idea about the purpose.
-
-Tasks available for the users to read con- sisted of:
-- To be recognized: Present your self in front of the machine and let it recognize you
-- Wrong recognition: Simulate a wrong recognition and say it to the system.
+We placed our system right by the vending machine at MICC, providing it an Internet connection (not really reliable that particular day due to works in progress) and installing all necessary software. We gathered all available staff, in couples or alone, and we presented them with a list of tasks, briefly explaining the application purpose and context.
+	
+The tasks that users had to perform are:
+- To be recognized: Present yourself in front of the machine and let it recognize you.
+- Wrong recognition: Simulate a wrong recognition and explain it to the system. 
 - Ask for a product: You are hungry or thirsty, so you ask for a product.
-- Ask for more products: You are very hungry or thirsty, so you ask for more than one product.
-- Remove a product: You changed your mind, remove a product.
-- Remove more producsts: You changed your mind, remove some products.
+- Ask for more products: You are very hungry or thirsty, so you ask for more than one product at once.
+- Remove a product: You changed your mind, remove a single product.
+- Remove more producsts: You changed your mind, remove many products.
 - Confirm the purchase: You are finished, agree to the transaction.
 
-After the completion, we asked the users to compile a google form structured as a SEQ (Single Ease Question) with a 7-point
-rating scale:
+After completing the tasks, we asked the users to compile a Google Form structured as a SEQ (Single Ease Question) with a 7-point rating scale:
 1. I found the reply time too high.
 2. I prefer using the mobile application instead of this system.
 3. It is hard to use it.
@@ -86,17 +85,18 @@ rating scale:
 Moreover we provided the users the chance to express some optional comments for each question.
 
 ### Results
-*Error trials*: We gathered 13 users, each tried 7 task, so the total amount of trials is 91. Just 12 of these tasks failed, but only 2 resulted in a critical failure due to the lack of connection to internet, the other 4 where due to fails in speech-recognition and where recovered only by repeating the request.
+*Error trials*: We gathered 13 users, each tried 7 task, so the total amount of trials is 91. Just 12 of these tasks failed, but only 2 resulted in a critical failure due to the lack of connection to Internet, the other 10 where due to fails in speech-recognition and where recovered just by repeating the request.
 
 ![fig10-11](./Images/fig10-11.png)
 
-Figure 10 shows that users’ opinions vary when asked if the latency between MICChinetta’s replies are too high. This may be linked to the fact that reply time varies with respect to internet connection. Moreover some user aknowledge the compu- tational efficiency required for speech recog- nition and pos-tagging and replies are biased.
+Figure 10 shows that user's opinions vary when asked if the latency between MICChinetta's replies are too high. This may be linked to the fact that the reply time varies with respect to Internet connection.
+Some users however, acknowledge the computational efficiency required for speech recognition and pos-tagging, so their replies are biased. 
 
-Figure 11 shows that the majority of the users would prefer to use the VUI instead of the mobile phone app.
+Figure 11 shows that the majority of users prefers to use the VUI instead of the mobile App.
 
 ![fig12-13](./Images/fig12-13.png)
 
-Figure 12 shows that most of the users found the system to be self explanatory, this is indeed crucial using a never-seen application. Moreover users agree about the pleasentness of the Graphical Interface demonstrated in Figure 13.
+Figure 12 shows that most of the users found the system to be self explanatory, this is indeed crucial using a never-seen application. Moreover users agree about the pleasantness of the Graphical Interface demonstrated in Figure 13.
 
 ![fig14-15](./Images/fig14-15.png)
 
@@ -104,10 +104,20 @@ Figure 14 affirms that face recognition was definitely working, this is a factor
 
 ![fig16-17](./Images/fig16-17.png)
 
-Figure 16 and Figure 17 are a good demonstration of the conversation skills of the system, it can understand what users ask and answers correctly. This is maybe the best result we had hoped for in devel- oping MICChinetta.
+We discovered that users ask for products in many different ways: someone makes a robot-like list of products, while others use more complex sentences, like in a conversation at the grocery store. In both this cases, MICChinetta behaved greatly.
+
+Figure 16 and Figure 17 are a good demonstrations of the conversation skills of the system; it can understand what users ask and answers accordingly.
 
 ## Conclusion
-We have presented MICChinetta, a VUI-GUI system to provide assistance in the process of purchasing snacks at a vending machine. We demonstrated the useful functionality of been able to recognize known people using face recognition and the effectiveness of vocal interactions with an automated system. Systems like this are growing fast in popularity for the most varyious scenarios, like car driving, mobile phones and very more. We discovered the possibilities of such methods for augmenting human-computer-interactions using a prototype like MICChinetta, showing pros and cons, like the latency in the responses, but considering it as a study this is indeed improvable from many aspects. We could have used better machines for carrying out all the computation in local, like speech-to-text, without relying over internet connection. Our final study confirmed that MICChinetta, but more in general VUIs, can do almost everything a GUI can do, not reducing task time, but giving the users different possibilities and experiences without using arms or hands. We believe that pushing our self in this direction and improving this techonologies, automated system will efficiently substitute standard interfaces where less and less interaction and effort from humans is required.
+We presented MICChinetta, a VUI-GUI based system that provides assistance in the process of purchasing snacks and drinks at a vending machine. Systems like this are growing fast in popularity for the most various scenarios, like car driving, mobile phones and many more.
+	
+We demonstrated the useful functionality of being able to identify users using face recognition and the effectiveness of vocal interactions with an automated system. We discovered the possibilities for augmenting human-computer interactions provided by a prototype like MICChinetta, showing pros and cons of this new approach.
+	
+A downside was found in a substantial latency in the responses of the system, but being this a study and a prototype, this problem could and will be solved in future releases, maybe using better machines for carrying out all the computation in local, like speech-to-text, without relying over Internet connection.
+	
+Our final study confirmed that MICChinetta, but more in general VUIs, can do almost everything a GUI can do, not reducing tasks times, but giving the users different possibilities and experiences without using arms or hands.
+	
+We believe that pushing ourselves in this direction and improving this technologies, they will efficiently substitute standard interfaces where less and less interaction and effort from humans is required.
 
 ## Requirements
 | Software                                                    | Version        | Required |
