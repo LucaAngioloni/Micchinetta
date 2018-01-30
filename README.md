@@ -25,7 +25,7 @@ With a webcam, the system should recognize known people. After the recognition, 
 The system must be connected to the internet to be able to use Google APIs and internal MICC APIs for accountability.
 Moreover, the software, to run a simple conversation, will need some capabilities in natural language processing. Many NLP software packages exist, but not many support Italian language along the English language. [TreeTagger](http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/) is the software chosen.
 
-All of this software components have a significant computational cost and will require a decent machine to run on.
+All of these software components have a significant computational cost and will require a decent machine to run on.
 
 ## Interface and Description
 To provide a visual feedback to the user, the system implements a simple interface.
@@ -57,7 +57,7 @@ The script `DatabaseManager.py` starts this graphical application that allows to
 ![Database_Manager.png](./Images/Database_Manager.png)
 
 ## Usability Tests
-The scenario of this tests is a well known and restricted context: the MICC laboratory.
+The scenario of these tests is a well known and restricted context: the MICC laboratory.
 However the usefulness of this system transcends from this and the results obtained are valid also in other similar scenarios.
 
 ### Environment and tasks
@@ -69,7 +69,7 @@ The tasks that users had to perform are:
 - Ask for a product: You are hungry or thirsty, so you ask for a product.
 - Ask for more products: You are very hungry or thirsty, so you ask for more than one product at once.
 - Remove a product: You changed your mind, remove a single product.
-- Remove more producsts: You changed your mind, remove many products.
+- Remove more products: You changed your mind, remove many products.
 - Confirm the purchase: You are finished, agree to the transaction.
 
 After completing the tasks, we asked the users to compile a Google Form structured as a SEQ (Single Ease Question) with a 7-point rating scale:
@@ -104,7 +104,7 @@ Figure 14 affirms that face recognition was definitely working, this is a factor
 
 ![fig16-17](./Images/fig16-17.png)
 
-We discovered that users ask for products in many different ways: someone makes a robot-like list of products, while others use more complex sentences, like in a conversation at the grocery store. In both this cases, MICChinetta behaved greatly.
+We discovered that users ask for products in many different ways: someone makes a robot-like list of products, while others use more complex sentences, like in a conversation at the grocery store. In both these cases, MICChinetta behaved greatly.
 
 Figure 16 and Figure 17 are a good demonstrations of the conversation skills of the system; it can understand what users ask and answers accordingly.
 
@@ -117,7 +117,7 @@ A downside was found in a substantial latency in the responses of the system, bu
 	
 Our final study confirmed that MICChinetta, but more in general VUIs, can do almost everything a GUI can do, not reducing tasks times, but giving the users different possibilities and experiences without using arms or hands.
 	
-We believe that pushing ourselves in this direction and improving this technologies, they will efficiently substitute standard interfaces where less and less interaction and effort from humans is required.
+We believe that pushing ourselves in this direction and improving these technologies, they will efficiently substitute standard interfaces where less and less interaction and effort from humans is required.
 
 ## Requirements
 | Software                                                    | Version        | Required |
