@@ -1,6 +1,6 @@
 # Micchinetta
 
-[![logo_micchinetta.jpg](https://s14.postimg.org/s9769vls1/logo_micchinetta.jpg)](https://postimg.org/image/nnb21j08t/)
+![logo_micchinetta.jpg](./Images/logo_micchinetta.jpg)
 
 ## Assignment
 Deploy an application interface using both face and speech recognition to achieve a transaction between the user and a vending machine. 
@@ -32,17 +32,17 @@ To provide a visual feedback to the user, the system implements a simple interfa
 
 The user will find the application in recognition state, with the interface showing a live view of the scene. Approaching the device, the user will appear on the screen and the recognition will start.
 
-[![Recognition.png](https://s9.postimg.org/5ga53l3en/Recognition.png)](https://postimg.org/image/r2p5km1yz/)
+![Recognition.png](./Images/Recognition.png)
 
 If recognized (matched with one of the known faces) the system gives a visual feedback of the successful recognition:
 
-[![Recognition_feedback.png](https://s9.postimg.org/nj37usrjj/Recognition_feedback.png)](https://postimg.org/image/z877irii3/)
+![Recognition_feedback.png](./Images/Recognition_feedback.png)
 
 If multiple faces are present int the scene, the closest (biggest) one is used for identity recognition.
 
 The application will then change state, entering the conversation state represented below:
 
-[![Conversation.png](https://s9.postimg.org/7xlwas2pr/Conversation.png)](https://postimg.org/image/gfvcf498b/)
+![Conversation.png](./Images/Conversation.png)
 
 As soon as the user is recognized, his reference image from the database will be showed along the matched identity and the conversation shall begin. If the identity matched is wrong, the user can tell the system during the conversation and the system will apologize and retry the recognition.
 
@@ -52,11 +52,72 @@ If the user agrees to the final bill, the machine will commit the transaction an
 ----------------
 
 Along the main app, an other utility app has been developed to help this system admins to manage the Faces database.
-The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and te credentials for the Transactions APIs).
+The script `DatabaseManager.py` starts this graphical application that allows to add, remove and modify users identities (and the credentials for the Transactions APIs). Face images can be added with drag and drop or using the webcam to capture the face of the new user.
 
-[![Database_Manager.png](https://s9.postimg.org/bngxq879r/Database_Manager.png)](https://postimg.org/image/g9d1ykssr/)
+![Database_Manager.png](./Images/Database_Manager.png)
 
 ## Usability Tests
+The scenario of this tests is a well known and restricted context: the MICC laboratory.
+However the usefulness of this system transcends from this and the results obtained are valid also in other similar scenarios.
+
+### Environment and tasks
+We placed our system right by the vending machine at MICC, providing it an Internet connection (not really reliable that particular day due to works in progress) and installing all necessary software. We gathered all available staff, in couples or alone, and we presented them with a list of tasks, briefly explaining the application purpose and context.
+	
+The tasks that users had to perform are:
+- To be recognized: Present yourself in front of the machine and let it recognize you.
+- Wrong recognition: Simulate a wrong recognition and explain it to the system. 
+- Ask for a product: You are hungry or thirsty, so you ask for a product.
+- Ask for more products: You are very hungry or thirsty, so you ask for more than one product at once.
+- Remove a product: You changed your mind, remove a single product.
+- Remove more producsts: You changed your mind, remove many products.
+- Confirm the purchase: You are finished, agree to the transaction.
+
+After completing the tasks, we asked the users to compile a Google Form structured as a SEQ (Single Ease Question) with a 7-point rating scale:
+1. I found the reply time too high.
+2. I prefer using the mobile application instead of this system.
+3. It is hard to use it.
+4. The facial recognition works correctly.
+5. The Graphic interface is pleasant.
+6. I can trust the system.
+7. MICChinetta can understand my request.
+8. MICChinetta’s replys are wrong.
+
+Moreover we provided the users the chance to express some optional comments for each question.
+
+### Results
+*Error trials*: We gathered 13 users, each tried 7 task, so the total amount of trials is 91. Just 12 of these tasks failed, but only 2 resulted in a critical failure due to the lack of connection to Internet, the other 10 where due to fails in speech-recognition and where recovered just by repeating the request.
+
+![fig10-11](./Images/fig10-11.png)
+
+Figure 10 shows that user's opinions vary when asked if the latency between MICChinetta's replies are too high. This may be linked to the fact that the reply time varies with respect to Internet connection.
+Some users however, acknowledge the computational efficiency required for speech recognition and pos-tagging, so their replies are biased. 
+
+Figure 11 shows that the majority of users prefers to use the VUI instead of the mobile App.
+
+![fig12-13](./Images/fig12-13.png)
+
+Figure 12 shows that most of the users found the system to be self explanatory, this is indeed crucial using a never-seen application. Moreover users agree about the pleasantness of the Graphical Interface demonstrated in Figure 13.
+
+![fig14-15](./Images/fig14-15.png)
+
+Figure 14 affirms that face recognition was definitely working, this is a factor in the trust placed by the user, reported in Figure 15, and confirmed in the next figures.
+
+![fig16-17](./Images/fig16-17.png)
+
+We discovered that users ask for products in many different ways: someone makes a robot-like list of products, while others use more complex sentences, like in a conversation at the grocery store. In both this cases, MICChinetta behaved greatly.
+
+Figure 16 and Figure 17 are a good demonstrations of the conversation skills of the system; it can understand what users ask and answers accordingly.
+
+## Conclusion
+We presented MICChinetta, a VUI-GUI based system that provides assistance in the process of purchasing snacks and drinks at a vending machine. Systems like this are growing fast in popularity for the most various scenarios, like car driving, mobile phones and many more.
+	
+We demonstrated the useful functionality of being able to identify users using face recognition and the effectiveness of vocal interactions with an automated system. We discovered the possibilities for augmenting human-computer interactions provided by a prototype like MICChinetta, showing pros and cons of this new approach.
+	
+A downside was found in a substantial latency in the responses of the system, but being this a study and a prototype, this problem could and will be solved in future releases, maybe using better machines for carrying out all the computation in local, like speech-to-text, without relying over Internet connection.
+	
+Our final study confirmed that MICChinetta, but more in general VUIs, can do almost everything a GUI can do, not reducing tasks times, but giving the users different possibilities and experiences without using arms or hands.
+	
+We believe that pushing ourselves in this direction and improving this technologies, they will efficiently substitute standard interfaces where less and less interaction and effort from humans is required.
 
 ## Requirements
 | Software                                                    | Version        | Required |
