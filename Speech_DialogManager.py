@@ -33,7 +33,15 @@ class Speech_DialogManager(QThread):
     Class that provides an interface for the dialog and actions components.
 
     Attributes:
-        
+        rec_on      Qt signal emitted when the system is ready to listen and starts listening
+        rec_off     Qt signal emitted when the system stops listening
+        updated     Qt signal emitted when a new dialog line needs to be redered
+        finished    Qt signal emitted when the transaction with the user is over
+        active      Boolean status of the dialog process
+        recognizer  Recogniser object (from speech_recognition package)
+        username    current user username
+        products    vending machine products data
+        bot         Bot class object that manages the conversation
     """
     rec_on = pyqtSignal()  # in order to work it has to be defined out of the contructor
     rec_off = pyqtSignal()  # in order to work it has to be defined out of the contructor
@@ -50,15 +58,28 @@ class Speech_DialogManager(QThread):
 
 
     def setProdData(self, products_data):
+        """
+        Method to set the products data
+
+        Args:
+            products_data     the data
+        """
         self.products = products_data
 
     def set_username(self, name):
+        """
+        Method to set the current user name
+
+        Args:
+            name    the user name
+        """
         self.username = name
         self.bot = Bot(self.products)
 
         self.bot.set_user_name(self.username)
 
     def record_and_understand(self):
+        """Method called to listen, record and understand what users say"""
         with sr.Microphone() as source:
             print("Say something!")
             call(["python3", "bip.py"])
@@ -83,22 +104,32 @@ class Speech_DialogManager(QThread):
             return 'richieste speech-to-text terminate'
 
     def write(self):
+        """Method called to input dialog sentences via terminal input (used for debugging)"""
         usersays = input("Say something!")
         return usersays
 
     def loop(self):
+        """Method called to initialize and start the dialog Thread"""
         self.start()
 
     def deactivate(self):
+        """Method called to stop and deactivate this Thread"""
         self.active = False
         self.quit()
         if self.isRunning():
             self.quit()
 
-    def sayhi(self, greetings): 
+    def sayhi(self, greetings):
+        """
+        Method that starts the speak script to perform text to speech.
+
+        Args:
+            greetings     the sentence to pass to the speak script
+        """
         call(["python3", "speak.py", greetings])
 
     def run(self):
+        """Main loop of this Thread"""
         self.active = True
         greetings = "Ciao "+str(self.username)+" cosa ti serve? Parla dopo il bip."
 

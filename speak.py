@@ -20,6 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""
+============
+Speak Script
+============
+
+Script that uses pyttsx3 for text to speech.
+"""
+
 import sys
 import pyttsx3
 from pathlib import Path

@@ -29,6 +29,14 @@ import re as regexp
 
 
 class Bot():
+    """
+    Game of Life main loop class.
+    Attributes:
+        going   bool value representing the state of the game
+        currentTimer    value of time between GoL steps in ms
+    Fires timeout signal every currentTimer ms. Game of Life and View controllers are connected to this signal.
+    """
+    
     def __init__(self, products):
         self.username = ''
         self.prodlist = products

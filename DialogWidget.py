@@ -35,12 +35,17 @@ class DialogWidget(QWidget):
     """
     Dialog window controller
     Attributes:
+        active                  Qt signal emitted upon activation
+        non_active              Qt signal emitted upon deactivation
+        speech_dialog_manager   Speech_DialogManager object for speech recognition and response creation
+        products_data           vending machine products data
     """
 
     active = pyqtSignal() # in order to work it has to be defined out of the contructor
     non_active = pyqtSignal() # in order to work it has to be defined out of the contructor
 
     def __init__(self, speech_dialog_manager):
+        """Class constructor that sets up the view layout and allocates attributes"""
         super().__init__()
         self.speech_dialog_manager = speech_dialog_manager
         #interface
@@ -99,6 +104,7 @@ class DialogWidget(QWidget):
 
 
     def getProd_csv(self, path_to_csv):
+        """Gets the products data from the csv file"""
         prod_data_dict = {}
 
         with open(path_to_csv) as file:
@@ -109,9 +115,11 @@ class DialogWidget(QWidget):
 
 
     def deactivate(self):
+        """Method called to stop and deactivate the dialog Thread"""
         self.non_active.emit()
 
     def activate(self, user):
+        """Method called to start and activate the dialog Thread"""
         self.dialog.clear()
         self.clear_table()
         db = FaceDatabase()
@@ -133,21 +141,25 @@ class DialogWidget(QWidget):
         self.active.emit()
 
     def mic_on(self):
+        """Method to change the microphone icon to the active one"""
         qpix = QPixmap("Resources/mic_green.png")
         self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
 
     def mic_off(self):
+        """Method to change the microphone icon to the non active one"""
         qpix = QPixmap("Resources/mic_grey.png")
         self.microphone.setPixmap(qpix.scaled(self.microphone.size(), Qt.KeepAspectRatio, Qt.FastTransformation))
 
 
     def clear_table(self):
+        """Method to clear the current bill table"""
         while (self.table.rowCount() > 0):
             self.table.removeRow(0)
         self.table.setRowCount(0);
 
     def update_bill(self, bill):
+        """Method to update the current bill table with the products in the bill object"""
         self.clear_table()
         for product in bill:
 
@@ -159,8 +171,8 @@ class DialogWidget(QWidget):
                 self.table.setItem(rowPosition , 0, QTableWidgetItem(str_prod))
                 self.table.setItem(rowPosition , 1, QTableWidgetItem(str(price)))
 
-    # slot called whenever Speech_DialogManager has updates. Update the view
     def update_dialog(self, phrase, bill):
+        """Slot called whenever Speech_DialogManager has updates. Updates the view."""
         if bill is not 0:
             #print(bill)
             self.update_bill(bill)

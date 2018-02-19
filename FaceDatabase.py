@@ -35,7 +35,10 @@ class FaceDatabase:
     Class that provides an interface for the faces and identities database.
 
     Attributes:
-        
+        path_to_faces           path to the faces images
+        model_face_encodings    python dictionary containing a face encoding (value) for each user (key)
+        toll                    threshold for face similarity
+        conn                    Database connection
     """
     def __init__(self):
         self.path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
@@ -43,7 +46,7 @@ class FaceDatabase:
         self.toll = 0.55
 
     def retrieve(self):
-        #preload faces encodings
+        """Method to pre-load faces encodings (populate the model_face_encodings dictionary)"""
         self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
         c = self.conn.cursor()
         for row in c.execute('SELECT id, encoding FROM faces'):
@@ -54,6 +57,12 @@ class FaceDatabase:
         self.conn.close()
 
     def get_identity(self, face_encoding):
+        """
+        Method to find the closest match in the faces database for a face_encoding. If none is found under the tollerance, Unknown is returned.
+
+        Args:
+            face_encoding    face encoding to match with database identities
+        """
         model_encodings = [self.model_face_encodings[k] for k in self.model_face_encodings]
         dists = face_recognition.face_distance(model_encodings, face_encoding)
 
@@ -66,6 +75,12 @@ class FaceDatabase:
             return "Unknown"
 
     def get_image_for_ID(self, id):
+        """
+        Method to find and return the image path relative to a user's identity id.
+
+        Args:
+            id    the user's identity
+        """
         self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
         c = self.conn.cursor()
         c.execute('SELECT im_path FROM faces WHERE id = ?', (id,))
@@ -77,6 +92,12 @@ class FaceDatabase:
         return self.path_to_faces + ret[0]
 
     def get_nickname(self, id):
+        """
+        Method to find and return the nikname relative to a user's identity id.
+
+        Args:
+            id    the user's identity
+        """
         self.conn = sqlite3.connect(self.path_to_faces + 'faces.db')
         c = self.conn.cursor()
         c.execute('SELECT nikname FROM faces WHERE id = ?', (id,))

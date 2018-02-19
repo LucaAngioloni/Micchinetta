@@ -58,11 +58,13 @@ class MainWindow(QWidget):
         super().resizeEvent(ev)
 
     def activate_video(self):
+        """Method to activate the videoWidget and face recognition thread"""
         self.dialogWidget.deactivate()
         self.videoWidget.activate()
         self.stackLayout.setCurrentIndex(0)
 
     def activate_dialog(self):
+        """Method to activate the dialogWidget and dialog thread"""
         self.videoWidget.deactivate()
         self.dialogWidget.activate(self.videoWidget.face_recogniser.currentUser)
         self.stackLayout.setCurrentIndex(1)

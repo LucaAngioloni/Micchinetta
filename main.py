@@ -20,6 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""
+============
+MICChinetta
+============
+
+An application interface using both face and speech recognition to achieve a transaction between the user and a vending machine.
+"""
+
 import sys
 import time
 

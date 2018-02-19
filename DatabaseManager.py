@@ -20,6 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""
+============
+Database Manager script
+============
+
+Script to launch the Database Manager utility app that allows system admins to manage the user's identities.
+"""
+
 import sys
 import os
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QTableView, QSizePolicy, QMessageBox
@@ -34,8 +42,8 @@ import json
 import uuid
 from VideoWidget import VideoWidget
 
-path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"
-db = QSqlDatabase.addDatabase("QSQLITE")
+path_to_faces = os.path.abspath(os.path.dirname(sys.argv[0])) + "/Faces/"  # path to the directory that contains the faces images.
+db = QSqlDatabase.addDatabase("QSQLITE")  # SQLite database connection
 db.setDatabaseName(path_to_faces + 'faces.db')
 
 import cv2
@@ -45,6 +53,16 @@ from FaceDatabase import FaceDatabase
 
 
 class FaceRecogniser(QThread):
+    """
+    Class that contains all the routines for face detection and recognition
+    Attributes:
+        database        a FaceDatabase class object used to match face identities
+        currentFrame    last frame of video elaborated
+        userImage       frame containing the face of the new user detected
+        active          boolean value representing the state of this object. active if the thread is running, false otherwise
+        currentUser     encoding of the last face detected
+        toll            threshold for face similarity
+    """
     updated = pyqtSignal() # in order to work it has to be defined out of the contructor
     person_identified = pyqtSignal() # in order to work it has to be defined out of the contructor
 
@@ -60,6 +78,7 @@ class FaceRecogniser(QThread):
         self.toll = 0.55
 
     def get_user_image(self):
+        """Returns the last frame containing the current user detected"""
         return cv2.cvtColor(self.userImage, cv2.COLOR_RGB2BGR)
 
     def get_current_frame(self):
@@ -174,8 +193,14 @@ class FaceRecogniser(QThread):
 
 
 class GetPicture(QWidget):
-
+    """
+    Controller class for the Get Picture window used to capture a new user's face.
+    Attributes:
+        face_recognizer         a FaceRecogniser object used to detect and record a new face for a new identity
+        video_widget            custom widget to show the live feed from webcam
+    """
     def __init__(self):
+        """Class constructor that sets up the window layout and allocates attributes"""
         super().__init__()
         self.title = 'Database Manager - Take Photo'
         self.setFixedSize(600,400)
@@ -187,17 +212,24 @@ class GetPicture(QWidget):
         self.setLayout(h)
 
     def activate(self):
+        """Method to activate this widget and start face detection"""
         self.show()
         self.video_widget.activate()
 
     def deactivate(self):
+        """Method to deactivate this widget and stop face detection"""
         self.hide()
         self.video_widget.deactivate()
 
 
 class EditWindow(QWidget):
-    
+    """
+    Controller class for theEdit window used to modify and delete identities.
+    Attributes:
+        model         model for the SQL table containg the identities
+    """
     def __init__(self):
+        """Class constructor that sets up the window layout and allocates attributes"""
         super().__init__()
         self.title = 'Database Manager - Edit'
         self.vLayout = QVBoxLayout()
@@ -217,18 +249,25 @@ class EditWindow(QWidget):
         self.show()
 
     def delete_row(self):
+        """Method to delete the current selected row (and relative identity from the database)"""
         idxs = self.table.selectionModel().selectedIndexes()
         if len(idxs) > 0:
             self.model.removeRows(idxs[0].row(), 1)
             self.model.select()
 
     def update_model(self):
+        """Updates the model from the database"""
         self.model.select()
 
 
 class DataDialog(QDialog):
-    
+    """
+    Controller class for the Data Dialog window that opens upon new user insertion. This window is used to insert the users information.
+    Attributes:
+        le_dict         dictionary containing all the line edits for the data
+    """
     def __init__(self, d):
+        """Class constructor that sets up the window layout and allocates attributes"""
         super().__init__()
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok
                                       | QDialogButtonBox.Cancel)
@@ -253,10 +292,16 @@ class DataDialog(QDialog):
         
  
 class AddWindow(QWidget):
- 
+    """
+    Controller class for the Add user window, used to insert a new user's face (with either image drag and drop or photo capture).
+    Attributes:
+        picture         a GetPicture object controlling the GetPicture window.
+        new_id          Qt signal emitted when a new user is detected and his face encoding has been calculated
+    """
     new_id = pyqtSignal()
 
     def __init__(self):
+        """Class constructor that sets up the window layout and allocates attributes"""
         super().__init__()
         self.title = 'Database Manager - Add'
         self.width = 320
@@ -264,6 +309,7 @@ class AddWindow(QWidget):
         self.initUI()
  
     def initUI(self):
+        """Method to set up the window layout and user interface"""
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
 
@@ -280,9 +326,11 @@ class AddWindow(QWidget):
         self.picture.face_recognizer.person_identified.connect(self.photo_taken)
 
     def take_photo(self):
+        """Method to activate the face recognition window"""
         self.picture.activate()
 
     def photo_taken(self):
+        """Slot called when a new user has been recognised and his picture has been taken"""
         self.picture.deactivate()
         encoding = self.picture.face_recognizer.currentUser
         d = {'Name': "", 'Surname': "", 'nikname': "", 'mail': "",  'password': ""}
@@ -316,7 +364,11 @@ class AddWindow(QWidget):
         
  
 class CustomLabel(QLabel):
-
+    """
+    Controller class for the custom label that is used to receive image drag and drop.
+    Attributes:
+        new_id          Qt signal emitted when a new user is detected in the image dropped
+    """
     new_id = pyqtSignal()
  
     def __init__(self, title, parent):
@@ -324,6 +376,7 @@ class CustomLabel(QLabel):
         self.setAcceptDrops(True)
  
     def dragEnterEvent(self, e):
+        """Qt event override for drag enter event"""
         if len(e.mimeData().urls()) > 0 and e.mimeData().urls()[0].isLocalFile():
             qi = QFileInfo(e.mimeData().urls()[0].toLocalFile())
             ext = qi.suffix()
@@ -335,6 +388,7 @@ class CustomLabel(QLabel):
             e.ignore()
  
     def dropEvent(self, e):
+        """Qt event override for drop event"""
         try:
             name_image = face_recognition.load_image_file(e.mimeData().urls()[0].toLocalFile())
             encoding = face_recognition.face_encodings(name_image)[0]
