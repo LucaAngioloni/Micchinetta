@@ -30,11 +30,21 @@ import re as regexp
 
 class Bot():
     """
-    Game of Life main loop class.
+    Bot class that manages the dialog between the user and the system.
     Attributes:
-        going   bool value representing the state of the game
-        currentTimer    value of time between GoL steps in ms
-    Fires timeout signal every currentTimer ms. Game of Life and View controllers are connected to this signal.
+        username                current users name
+        prodlist                vending machine products data
+        prodlist_itemoid        vending machine products data splitted by spaces for matching in check_for_products
+        request                 Counter Dict object representing users bill
+        tagger                  Object from TreeTagger Library
+        converter               Instance of Converter class
+        predicates              List of predicates that should be recognized from what user say
+        positive_predicates     Sub-list of positive predicates
+        negative_predicates     Sub-list of negative predicates
+        completings             List of words that should end conversation positively
+        terminatings            List of words that should remove items
+        id_err                  List of key words that should trigger face recognition
+
     """
     
     def __init__(self, products):
@@ -57,10 +67,20 @@ class Bot():
 
 
     def set_user_name(self, name):
+        """
+        Method to set the user name
+
+        Args:
+            name     the user name
+        """
         self.username = name
         print(self.username)
 
-    def add_itemoid(self): 
+    def add_itemoid(self):
+        """
+        Method to fill prodlist_itemoid
+
+        """ 
         products = []
         for item in self.prodlist:
             for itemoid in item.split():
@@ -69,38 +89,61 @@ class Bot():
 
 
     def check_id_error(self, userask):
+        """
+        Method to check if user said a word contained in id_err
+
+        Args:
+            userask     what the user said
+        """
         for word in userask.split():
             if word.lower() in self.id_err:
                 return True
         return False
 
     def check_for_completings(self, userask):
+        """
+        Method to check if the user said a word contained in completings
+
+        Args:
+            userask     what the user said
+        """
         for word in userask.split():
             if word in self.completings:
                 return True
         return False
 
     def check_for_terminatings(self, userask):
+        """
+        Method to check if the user said a word contained in terminatings
+
+        Args:
+            userask     what the user said
+        """
         for word in userask.split():
             if word in self.terminatings:
                 return True
         return False
 
     def check_for_products(self, sentence):
-        # torna True se la frase contiene prodotti o sinonimi di prodotti
+        """
+        Method to check if the user said a word contained in prodlist_itemoid. 
+
+        Args:
+            userask     what the user said
+        """
         for prod in self.prodlist_itemoid:
             if prod in sentence:
                 return True
         return False
-        # for word in sentence.split():
-        #     if word.lower() in self.prodlist_itemoid:
-        #         return True
-        # return False
+
 
     def check_itemoid(self, item):
-        # una volta tree taggata una frase, per poterla sostituire con la versione semplificata,
-        # bisogna controllare se esiste una versione semplificata della parola,
-        # in caso negativo si aggiungono qui i casi speciali
+        """
+        Once the phrase is POS-tagged, replace each word withe the simplified version of it (checking its existance).
+
+        Args:
+            item     the word from what user asked to be replaced
+        """
         if item[2] == '<unknown>':
             if item[0] == 'coca-cole' or item[0] == 'cocacola' or item[0] == 'cocacole' or item[0] == 'Coca Cola':
                 return 'coca-cola'
@@ -118,7 +161,12 @@ class Bot():
                 return ''
 
     def get_predicates(self, phrase):
-        # restiruisce la lista di predicati presenti in una frase
+        """
+        Method to get predicate from a phrase
+
+        Args:
+            phrase     the phrase where to search for predicates
+        """
         pred = []
         for i in self.predicates:
             if i in phrase:
@@ -126,7 +174,12 @@ class Bot():
         return pred
 
     def contains_predicate(self, phrase):
-        # torna True se una frase è provvista di predicato
+        """
+        Method to get the presence of predicate in a phrase
+
+        Args:
+            phrase     the phrase where to search for predicates
+        """
         pred = self.get_predicates(phrase)
         if len(pred) == 0:
             return False
@@ -134,9 +187,13 @@ class Bot():
             return True
 
     def set_predicate(self, phrase):
-        # data una frase, controllo se ha gia esattamente un predicato, se si è ok e la ritorno
-        # altrimenti tolgo tutti i predicati e imposto che ci sia "rimuovere"
-        # Es. "voglio togliere un acqua" -> "rimuovere un acqua"
+        """
+        Method to set a predicate in a phrase. If absent or more than one, force a negative_predicate. 
+        Es. "voglio togliere un acqua" -> "rimuovere un acqua"
+
+        Args:
+            phrase     the phrase where to put the predicate
+        """
         if len(self.get_predicates(phrase)) ==1:
             return phrase
         querywords = phrase.split()
@@ -146,8 +203,13 @@ class Bot():
         return result
 
     def set_request_kind(self, list_of_subphrase):
-        # data una lista di sottofrasi, assegna alla prima il predicato 'volere' se sprovvista di predicato, 
-        # e poi assegna alle sottofrasi sprovviste, il predicato di quella immediatamente precedente 
+        """
+        Given a list_of_subphrases, check if the first item in lisr_of_subphrases has a predicate, if no predicate is found in it,
+        set a positive predicate. The we assign at each element with no predicate, the predicate of the previous element.
+
+        Args:
+            list_of_subphrases     the list containing phrases as elements
+        """
         if self.contains_predicate(list_of_subphrase[0]) == False:
             list_of_subphrase[0] = 'volere ' + list_of_subphrase[0]
         else:
@@ -163,25 +225,37 @@ class Bot():
 
 
     def get_prod(self, phrase):
-        # data una frase, ritorna il primo prodotto conosciuto trovato
+        """
+        Method to get a prod name from a phrase
+
+        Args:
+            phrase     a string
+        """
         for prod in self.prodlist:
             if prod in phrase:
                 return prod
         return False
-        # for word in phrase.split():
-        #     if word.lower() in self.prodlist:
-        #         return word.lower()
-        # return False
+
 
     def get_amount(self, phrase):
-        # data una frase, ritorna il primo digit trovato
+        """
+        Method to get the amount  from a phrase
+
+        Args:
+            phrase     a string
+        """
         for word in phrase.split():
             if word.isdigit():
                 return int(word)
         return None
 
     def get_all_products(self, phrase):
-        # data una frase, ritorna una lista con tutti i prodotti conosciuti contenuti
+        """
+        Method to get all the products from a phrase
+
+        Args:
+            phrase     a string
+        """
         prod = []
         for item in self.prodlist:
             if item in phrase:
@@ -189,7 +263,14 @@ class Bot():
         return prod
 
     def correct_no_amount(self, list_of_subphrase):
-        # corregge casi come ['voglio acqua', 'coca-cola'] -> ['voglio 1 acqua', '1 coca-cola']
+        """
+        Method to correct no amount cases in list_of_subphrases
+
+        Es. ['voglio acqua', 'coca-cola'] -> ['voglio 1 acqua', '1 coca-cola']
+
+        Args:
+            list_of_subphrases     the list containing phrases as elements
+        """
         new_list_subphrase = []
         for phrase in list_of_subphrase:
             if self.get_amount(phrase) is None:
@@ -198,6 +279,12 @@ class Bot():
         return new_list_subphrase
 
     def correct_multiple_prod(self, list_of_subphrase):
+        """
+        Method to set the user name
+
+        Args:
+            name     the user name
+        """
         # corregge casi come ['voglio 1 acqua 1 coca-cola'] -> ['voglio 1 acqua', '1 coca-cola']
         new_list = []
         final_list = []
@@ -220,6 +307,12 @@ class Bot():
 
 
     def correct_ultra_no_amount(self, list_of_subphrase):
+        """
+        Method to correct another case of no_amount
+
+        Args:
+            list_of_subphrases     the list containing phrases as elements
+        """
         new_list = []
         for phrase in list_of_subphrase:
             items = {}
@@ -240,6 +333,12 @@ class Bot():
 
 
     def parse_input(self, usersaid):
+        """
+        Method to parse what user said
+
+        Args:
+            usersaid     what the user said
+        """
         p = self.tagger.tag(usersaid)
         # faccio una lista degli elementi parsati per semplificare la frase
         seq_phrase = []
@@ -282,6 +381,12 @@ class Bot():
         return(corrected_subphrase)
 
     def update_request(self, userask):
+        """
+        parse the input and update request accordingly
+
+        Args:
+            userask     what the user asked
+        """
         list_of_subphrases = self.parse_input(userask)
         for phrase in list_of_subphrases:
             pred = self.get_predicates(phrase)
@@ -295,12 +400,22 @@ class Bot():
                     self.request[prod] = 0
 
     def check_if_request_is_not_empty(self):
+        """
+        Return True if the request dict is not empty.  
+
+        """
         for prod in self.request:
             if self.request[prod] > 0:
                 return True
         return False
 
     def replace_itemoid(self, userask):
+        """
+        Method to replace itemoid with preper item names using edit distance
+
+        Args:
+            userask     what the user asked
+        """
         word_list = userask.split()
         for word in word_list:
             if len(word)>2:
@@ -316,6 +431,12 @@ class Bot():
         return userask
 
     def replace_numbers(self, userask):
+        """
+        Method to replace string number with digits
+
+        Args:
+            userask     what the user asked
+        """
         converted_phrase = ''
         for item in userask.split():
             if item =='un' or item =='una':
@@ -332,6 +453,12 @@ class Bot():
 
 
     def reply(self, userask):
+        """
+        Method to reply to the user
+
+        Args:
+            userask     what the user asked
+        """
 
         userask = userask.replace("'", " ").replace(" alla ", " ").replace(" al ", " ").replace(" ai ", " ").replace(" di ", " ").replace("coca cola", "coca-cola").replace("coca cole", "coca-cola")
 
@@ -413,9 +540,3 @@ class Bot():
             reply = 'Scusa non ho capito. Ripeti perfavore.'
             print(reply)
             return False, reply, self.request
-
-
-
-
-
-
